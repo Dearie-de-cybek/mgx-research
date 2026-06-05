@@ -70,6 +70,45 @@ const easeDrawer = [0.32, 0.72, 0, 1] as const;
 
 /* ── COMPONENTS ───────────────────────────────────────────────────── */
 
+/*
+  Logo — "MG" white (for dark/image backgrounds)
+         "MG" dark  (for light panel backgrounds)
+         "X"  always blue→green gradient
+*/
+function MGXLogo({
+  size = "text-[24px]",
+  mgColor = "white",
+}: {
+  size?: string;
+  mgColor?: "white" | "dark";
+}) {
+  return (
+    <span
+      className={`font-display font-black ${size} leading-none select-none uppercase`}
+      style={{ letterSpacing: "0.12em" }}
+    >
+      <span
+        style={{
+          color: mgColor === "white" ? "#ffffff" : "#0c0c0d",
+          textShadow: mgColor === "white" ? "0 1px 6px rgba(0,0,0,0.25)" : "none",
+        }}
+      >
+        MG
+      </span>
+      <span
+        style={{
+          background: "linear-gradient(135deg, #3B9FE8 20%, #3DBE6E 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        }}
+      >
+        X
+      </span>
+    </span>
+  );
+}
+
 /* Superscript dot — absolutely positioned top-right of parent link */
 function BlinkDot() {
   return (
@@ -229,87 +268,302 @@ function ServicesDropdown({ open }: { open: boolean }) {
   );
 }
 
-/* Book modal */
-function BookModal({
-  open,
-  onClose,
+/* ── BOOK MODAL ───────────────────────────────────────────────────
+   Two solid-white panels: person card left, scheduler right.
+   No glass. Thick white. Calendly-style.
+──────────────────────────────────────────────────────────────── */
+
+const PEOPLE = {
+  emeka: {
+    name: "Emeka",
+    role: "Co-Founder & CEO",
+    img: "https://images.pexels.com/photos/5083224/pexels-photo-5083224.jpeg?auto=compress&cs=tinysrgb&w=700",
+  },
+  drvee: {
+    name: "Dr Vee",
+    role: "Chief Innovation Officer",
+    img: "https://images.pexels.com/photos/5905885/pexels-photo-5905885.jpeg?auto=compress&cs=tinysrgb&w=700",
+  },
+} as const;
+
+type PersonKey = keyof typeof PEOPLE;
+
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAYS   = ["Mo","Tu","We","Th","Fr","Sa","Su"];
+const TIMES  = ["9:00 AM","10:00 AM","11:00 AM","12:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM"];
+
+function MiniCalendar({
+  onSelect,
 }: {
-  open: boolean;
-  onClose: () => void;
+  onSelect: (date: string) => void;
 }) {
+  const today = new Date();
+  const [year, setYear]     = useState(today.getFullYear());
+  const [month, setMonth]   = useState(today.getMonth());
+  const [selected, setSelected] = useState<number | null>(null);
+
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Shift so Monday = 0
+  const offset = (firstDay + 6) % 7;
+
+  const prev = () => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); setSelected(null); };
+  const next = () => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); setSelected(null); };
+
+  const pick = (d: number) => {
+    setSelected(d);
+    onSelect(`${MONTHS[month]} ${d}, ${year}`);
+  };
+
+  const cells: (number | null)[] = [
+    ...Array(offset).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  return (
+    <div>
+      {/* Month nav */}
+      <div className="flex items-center justify-between mb-5">
+        <span className="font-semibold text-stone-900 text-[15px]">
+          {MONTHS[month]} {year}
+        </span>
+        <div className="flex gap-1">
+          {[prev, next].map((fn, i) => (
+            <button key={i} onClick={fn}
+              className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-stone-100 transition-colors text-stone-500 text-sm">
+              {i === 0 ? "‹" : "›"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Day headers */}
+      <div className="grid grid-cols-7 mb-2">
+        {DAYS.map(d => (
+          <div key={d} className="text-center font-mono text-[10px] uppercase tracking-wider text-stone-400 py-1">
+            {d}
+          </div>
+        ))}
+      </div>
+
+      {/* Date grid */}
+      <div className="grid grid-cols-7 gap-y-1">
+        {cells.map((d, i) => {
+          const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+          const isPast  = d !== null && new Date(year, month, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          const isSel   = d === selected;
+          return (
+            <div key={i} className="flex items-center justify-center h-8">
+              {d ? (
+                <button
+                  onClick={() => !isPast && pick(d)}
+                  disabled={isPast}
+                  className={`w-8 h-8 rounded-full text-[13px] font-medium transition-all duration-150
+                    ${isPast ? "text-stone-300 cursor-not-allowed" : "hover:bg-stone-100 cursor-pointer"}
+                    ${isSel ? "!bg-stone-900 text-white" : ""}
+                    ${isToday && !isSel ? "border border-stone-300 text-stone-900" : "text-stone-700"}
+                  `}
+                >
+                  {d}
+                </button>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function BookModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [person, setPerson]       = useState<PersonKey>("emeka");
+  const [dropOpen, setDropOpen]   = useState(false);
+  const [selDate, setSelDate]     = useState<string | null>(null);
+  const [selTime, setSelTime]     = useState<string | null>(null);
+  const p = PEOPLE[person];
+
   return (
     <AnimatePresence>
       {open && (
         <>
+          {/* Backdrop */}
           <motion.div
-            key="modal-bg"
+            key="bm-bg"
+            className="fixed inset-0 z-[80]"
+            style={{ background: "rgba(0,0,0,0.35)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={onClose}
-            className="fixed inset-0 z-[80] bg-black/15 backdrop-blur-sm"
           />
+
+          {/* Two-panel container */}
           <motion.div
-            key="modal-panel"
-            initial={{ opacity: 0, scale: 0.96, y: 16 }}
+            key="bm-wrap"
+            className="fixed inset-4 md:inset-0 md:top-1/2 md:left-1/2 z-[90] md:-translate-x-1/2 md:-translate-y-1/2 flex overflow-hidden rounded-2xl shadow-2xl"
+            style={{ maxWidth: "860px", maxHeight: "90vh", width: "100%", height: "fit-content" }}
+            initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 16 }}
-            transition={{ duration: 0.35, ease }}
-            style={{ transformOrigin: "center" }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-[90] max-w-md mx-auto glass-strong rounded-3xl p-7"
+            exit={{ opacity: 0, scale: 0.96, y: 20 }}
+            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div className="flex items-start justify-between mb-5">
-              <div>
-                <p className="font-mono text-[10px] text-stone-400 uppercase tracking-[0.15em] mb-1">
-                  MGX Research
-                </p>
-                <h2 className="text-xl font-semibold text-stone-900 tracking-tight">
-                  Book a call
-                </h2>
+            {/* ── LEFT: Person card ── */}
+            <div className="bg-white w-[320px] shrink-0 flex flex-col p-7 gap-5 border-r border-stone-100">
+              {/* Duration badge */}
+              <div className="inline-flex">
+                <span className="border border-stone-300 text-stone-600 text-[11px] font-mono uppercase tracking-[0.15em] px-3 py-1 rounded">
+                  30 Mins
+                </span>
               </div>
-              <button
-                onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors text-stone-400 text-lg leading-none mt-0.5"
-                aria-label="Close"
-              >
-                ×
-              </button>
+
+              {/* Title with dropdown */}
+              <div>
+                <p className="text-stone-500 text-[13px] mb-1">Book an intro call with</p>
+                <div className="relative">
+                  <button
+                    onClick={() => setDropOpen(v => !v)}
+                    className="flex items-center gap-1.5 font-semibold text-stone-900 text-[17px] hover:opacity-70 transition-opacity"
+                  >
+                    {p.name}
+                    <motion.svg
+                      width="12" height="12" viewBox="0 0 12 12" fill="none"
+                      animate={{ rotate: dropOpen ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </motion.svg>
+                  </button>
+
+                  <AnimatePresence>
+                    {dropOpen && (
+                      <motion.div
+                        key="person-drop"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.18 }}
+                        className="absolute top-full left-0 mt-2 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden z-10 w-44"
+                      >
+                        {(Object.keys(PEOPLE) as PersonKey[]).map(key => (
+                          <button
+                            key={key}
+                            onClick={() => { setPerson(key); setDropOpen(false); }}
+                            className={`w-full text-left px-4 py-3 text-[14px] font-medium transition-colors hover:bg-stone-50
+                              ${person === key ? "text-stone-900 bg-stone-50" : "text-stone-600"}`}
+                          >
+                            <span className="block">{PEOPLE[key].name}</span>
+                            <span className="block text-[11px] font-normal text-stone-400">{PEOPLE[key].role}</span>
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              {/* Photo — animates on swap */}
+              <div className="relative flex-1 min-h-[260px] rounded-xl overflow-hidden bg-stone-100">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={person}
+                    className="absolute inset-0"
+                    initial={{ opacity: 0, scale: 1.04 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.97 }}
+                    transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                  >
+                    <Image
+                      src={p.img}
+                      alt={p.name}
+                      fill
+                      sizes="280px"
+                      className="object-cover object-top"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Role */}
+              <div>
+                <p className="font-semibold text-stone-900 text-[14px]">{p.name}</p>
+                <p className="text-stone-400 text-[12px]">{p.role}</p>
+              </div>
             </div>
 
-            <p className="text-stone-500 text-sm leading-relaxed mb-5">
-              Let's talk. We'll reach out within 24 hours to find a time that
-              works.
-            </p>
+            {/* ── RIGHT: Scheduler ── */}
+            <div className="bg-white flex-1 flex flex-col overflow-y-auto">
+              {/* Close btn */}
+              <div className="flex justify-end p-5 pb-0">
+                <button
+                  onClick={onClose}
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100 transition-colors text-stone-400 text-lg"
+                >
+                  ×
+                </button>
+              </div>
 
-            <form
-              className="flex flex-col gap-2.5"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              {[
-                { type: "text", placeholder: "Your name" },
-                { type: "email", placeholder: "Work email" },
-                { type: "text", placeholder: "Company (optional)" },
-              ].map((field) => (
-                <input
-                  key={field.placeholder}
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  className="w-full px-4 py-3 rounded-xl bg-white/60 border border-stone-200 text-stone-900 placeholder:text-stone-400 text-sm outline-none focus:border-stone-300 focus:bg-white/90 transition-all duration-150"
-                />
-              ))}
-              <textarea
-                placeholder="What are you working on?"
-                rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-white/60 border border-stone-200 text-stone-900 placeholder:text-stone-400 text-sm outline-none focus:border-stone-300 focus:bg-white/90 transition-all duration-150 resize-none"
-              />
-              <button
-                type="submit"
-                className="w-full py-3.5 rounded-xl bg-stone-900 text-white text-sm font-medium hover:bg-stone-700 active:scale-[0.98] transition-all duration-150 mt-0.5"
-              >
-                Send request →
-              </button>
-            </form>
+              <div className="px-7 pb-8 flex flex-col gap-6">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-1">
+                    MGX Research
+                  </p>
+                  <h3 className="font-semibold text-stone-900 text-[18px] leading-snug">
+                    Select a date &amp; time
+                  </h3>
+                </div>
+
+                {/* Calendar */}
+                <MiniCalendar onSelect={setSelDate} />
+
+                {/* Time slots — show after date selected */}
+                <AnimatePresence>
+                  {selDate && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <p className="text-[12px] font-mono uppercase tracking-[0.18em] text-stone-400 mb-3">
+                        {selDate} · WAT (GMT+1)
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {TIMES.map(t => (
+                          <button
+                            key={t}
+                            onClick={() => setSelTime(t)}
+                            className={`py-2.5 rounded-lg text-[13px] font-medium border transition-all duration-150
+                              ${selTime === t
+                                ? "bg-stone-900 text-white border-stone-900"
+                                : "bg-white text-stone-700 border-stone-200 hover:border-stone-400"
+                              }`}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Confirm */}
+                <AnimatePresence>
+                  {selDate && selTime && (
+                    <motion.button
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="w-full py-3.5 rounded-xl bg-stone-900 text-white text-[14px] font-semibold hover:bg-stone-700 active:scale-[0.98] transition-all"
+                    >
+                      Confirm — {selDate} at {selTime}
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
           </motion.div>
         </>
       )}
@@ -368,31 +622,30 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16, transition: { duration: 0.25 } }}
             transition={{ duration: 0.45, ease }}
-            className="fixed top-14 left-1/2 -translate-x-1/2 z-50 hidden md:block"
-            style={{ width: "calc(100% - 3rem)", maxWidth: "1100px" }}
+            className="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden md:block"
+            style={{ width: "calc(100% - 2rem)", maxWidth: "1320px" }}
+            onMouseLeave={() => setServicesOpen(false)}
           >
-            <div className="glass-nav rounded-lg flex items-center justify-between px-8 py-4 gap-16">
-              {/* Logo */}
-              <a
-                href="/"
-                className="font-display text-[24px] font-bold tracking-tight text-black shrink-0 select-none uppercase leading-none group"
-              >
-                <span className="underline-offset-4 group-hover:underline decoration-black decoration-2">
-                  MGX
-                </span>
+            {/* pill */}
+            <div className="glass-nav rounded-lg flex items-center justify-between px-10 py-4 gap-20">
+              {/* Logo — MG white, X blue-green (on taupe glass over dark image) */}
+              <a href="/" className="shrink-0 hover:opacity-85 transition-opacity duration-150">
+                <MGXLogo size="text-[26px]" mgColor="white" />
               </a>
 
               {/* Nav links */}
+              {/* FIX 2: font-semibold for contrast on image */}
               <nav className="flex items-center gap-3">
                 {navLinks.map((link) =>
                   link.dropdown ? (
                     <button
                       key={link.label}
+                      onMouseEnter={() => setServicesOpen(true)}
                       onClick={(e) => {
                         e.stopPropagation();
                         setServicesOpen((v) => !v);
                       }}
-                      className="flex items-center gap-2 px-6 py-2.5 rounded-md text-[17px] text-black hover:underline underline-offset-4 transition-all duration-200"
+                      className="flex items-center gap-2 px-6 py-2.5 rounded-md text-[17px] font-semibold text-stone-950 hover:underline underline-offset-4 transition-all duration-150"
                     >
                       {link.label}
                       <ChevronDown open={servicesOpen} />
@@ -401,7 +654,7 @@ export default function Header() {
                     <a
                       key={link.label}
                       href={link.href}
-                      className="relative flex items-center px-6 py-2.5 rounded-md text-[17px] text-black hover:underline underline-offset-4 transition-all duration-200"
+                      className="relative flex items-center px-6 py-2.5 rounded-md text-[17px] font-semibold text-stone-950 hover:underline underline-offset-4 transition-all duration-150"
                     >
                       {link.label}
                       {link.active && <BlinkDot />}
@@ -410,10 +663,10 @@ export default function Header() {
                 )}
               </nav>
 
-              {/* Book CTA — #EBFFB3 */}
+              {/* Book CTA — FIX 3: no rounded-xl → rounded-md, no border */}
               <button
                 onClick={() => setBookOpen(true)}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl text-[15px] font-medium text-stone-900 shrink-0 transition-all duration-200 active:scale-[0.97] hover:brightness-95"
+                className="flex items-center gap-2 px-6 py-3 rounded-md text-[15px] font-semibold text-stone-900 shrink-0 transition-all duration-150 active:scale-[0.97] hover:brightness-95"
                 style={{ background: "#EBFFB3" }}
               >
                 Book a call now
@@ -421,7 +674,7 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Services dropdown — lives inside relative header */}
+            {/* Services dropdown — hover stays open, onMouseLeave on pill closes */}
             <ServicesDropdown open={servicesOpen} />
           </motion.header>
         )}
@@ -441,11 +694,8 @@ export default function Header() {
             className="fixed left-5 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col"
           >
             <div className="glass-nav rounded-2xl flex items-center gap-3 px-4 py-3">
-              <a
-                href="/"
-                className="font-display text-[20px] font-bold tracking-tight text-stone-900 select-none uppercase leading-none"
-              >
-                MGX
+              <a href="/" className="hover:opacity-80 transition-opacity">
+                <MGXLogo size="text-[20px]" mgColor="dark" />
               </a>
               <div className="w-px h-4 bg-stone-300/70 shrink-0" />
               <button
@@ -487,11 +737,8 @@ export default function Header() {
             >
               {/* Drawer header */}
               <div className="flex items-center justify-between mb-12">
-                <a
-                  href="/"
-                  className="font-display text-xl font-bold tracking-tight text-stone-900 select-none uppercase"
-                >
-                  MGX
+                <a href="/" className="hover:opacity-80 transition-opacity">
+                  <MGXLogo size="text-[22px]" mgColor="dark" />
                 </a>
                 <button
                   onClick={() => setSideOpen(false)}
@@ -586,11 +833,8 @@ export default function Header() {
       ════════════════════════════════════════════════════════════ */}
       <div className="md:hidden fixed top-4 left-4 right-4 z-50">
         <div className="glass-nav rounded-2xl flex items-center justify-between px-5 py-3.5">
-          <a
-            href="/"
-            className="font-display text-[22px] font-bold tracking-tight text-stone-900 select-none uppercase leading-none"
-          >
-            MGX
+          <a href="/" className="hover:opacity-80 transition-opacity">
+            <MGXLogo size="text-[22px]" mgColor="white" />
           </a>
           <button
             onClick={() => setMobileOpen((v) => !v)}
@@ -622,11 +866,8 @@ export default function Header() {
           >
             {/* Mobile header */}
             <div className="flex items-center justify-between px-6 pt-5 pb-4">
-              <a
-                href="/"
-                className="font-display text-[22px] font-bold tracking-tight text-stone-900 select-none uppercase leading-none"
-              >
-                MGX
+              <a href="/" className="hover:opacity-80 transition-opacity">
+                <MGXLogo size="text-[22px]" mgColor="dark" />
               </a>
               <button
                 onClick={() => setMobileOpen(false)}

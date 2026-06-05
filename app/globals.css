@@ -88,6 +88,14 @@
   font-family: "Times New Roman", Times, Georgia, serif;
 }
 
+@utility text-whitesmoke {
+  color: #F5F5F5;
+}
+
+@utility text-offwhite {
+  color: #FAF9F6;
+}
+
 /* ════════════════════════════════════════════════════════════════════
    THEME TOKENS
 ════════════════════════════════════════════════════════════════════ */
@@ -157,15 +165,13 @@ body {
     inset 0 1px 0 oklch(100% 0 0 / 0.5);
 }
 
-/* Nav-specific glass — warm taupe tint matching Yugen's #C8C2BC palette */
+/* Nav-specific glass — warm taupe tint, no visible border */
 @utility glass-nav {
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  background-color: rgb(200 194 188 / 0.62);
-  border: 1px solid rgb(255 255 255 / 0.18);
-  box-shadow:
-    0 2px 16px rgb(0 0 0 / 0.06),
-    inset 0 1px 0 rgb(255 255 255 / 0.35);
+  background-color: rgb(200 194 188 / 0.68);
+  border: none;
+  box-shadow: 0 2px 20px rgb(0 0 0 / 0.08);
 }
 
 @utility glass-strong {
