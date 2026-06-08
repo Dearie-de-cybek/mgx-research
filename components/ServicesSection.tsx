@@ -1,358 +1,187 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import AnimatedX from "./AnimatedX";
 
-gsap.registerPlugin(ScrollTrigger);
+const ease = [0.23, 1, 0.32, 1] as const;
 
-/* ── DATA ─────────────────────────────────────────────────────────── */
 const services = [
   {
-    number: "01",
+    n: "01",
     title: "Intelligence Systems",
     sub: "AI · ML · Data Analytics · SaaS",
-    desc: "We turn your raw data into decisions. Custom AI models, real-time analytics, and intelligent dashboards that adapt to how your business actually operates — not how a vendor imagines it should.",
-    img: "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    span: "wide" as const,
+    desc: "We turn raw data into decisions. Custom AI models, real-time analytics, and intelligent dashboards that adapt to how your business actually operates.",
   },
   {
-    number: "02",
+    n: "02",
     title: "Security & Resilience",
     sub: "Cybersecurity · Managed IT · Threat Intel",
-    desc: "Proactive defence across your entire digital surface. Zero-trust architecture, 24/7 monitoring and incident response — so a breach stays a near-miss, not a headline.",
-    img: "https://images.pexels.com/photos/5380660/pexels-photo-5380660.jpeg?auto=compress&cs=tinysrgb&w=900",
-    span: "normal" as const,
+    desc: "Proactive defence across your entire digital surface. Zero-trust architecture, 24/7 monitoring and incident response — so a breach stays a near-miss.",
   },
   {
-    number: "03",
+    n: "03",
     title: "Automation & Robotics",
     sub: "RPA · Robotics · Process Intelligence",
-    desc: "Eliminate the work that shouldn't need a human. We design and deploy automation that scales — from front-office workflows to factory floor robotics.",
-    img: "https://images.pexels.com/photos/3913025/pexels-photo-3913025.jpeg?auto=compress&cs=tinysrgb&w=900",
-    span: "normal" as const,
+    desc: "Eliminate work that shouldn't need a human. We design automation that scales — from front-office workflows to factory floor robotics.",
   },
   {
-    number: "04",
+    n: "04",
     title: "Digital Infrastructure",
     sub: "Cloud · Enterprise · Custom Software",
-    desc: "The foundation everything runs on. We architect cloud environments, enterprise platforms and custom software built for reliability at scale — without locking you into a single vendor.",
-    img: "https://images.pexels.com/photos/442150/pexels-photo-442150.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    span: "wide" as const,
+    desc: "We architect cloud environments, enterprise platforms and custom software built for reliability at scale — without locking you into a single vendor.",
   },
   {
-    number: "05",
+    n: "05",
     title: "Governance & Smart Systems",
     sub: "E-Governance · Smart Cities · Urban Tech",
-    desc: "Technology that serves the public good. From citizen portals to smart city infrastructure — systems designed first for the people who use them every day.",
-    img: "https://images.pexels.com/photos/3769138/pexels-photo-3769138.jpeg?auto=compress&cs=tinysrgb&w=900",
-    span: "normal" as const,
+    desc: "Technology that serves the public good. From citizen portals to smart city infrastructure — systems designed for the people who use them every day.",
   },
   {
-    number: "06",
+    n: "06",
     title: "Human-Centered Innovation",
     sub: "HealthTech · EdTech · UX Design",
-    desc: "Innovation with the human in the room. We build health, education and service platforms designed for real people, real constraints, and real communities.",
-    img: "https://images.pexels.com/photos/4226140/pexels-photo-4226140.jpeg?auto=compress&cs=tinysrgb&w=900",
-    span: "normal" as const,
+    desc: "Innovation with the human in the room. We build health, education and service platforms designed for real people, real constraints, real communities.",
   },
 ];
 
-/* ── CARD ─────────────────────────────────────────────────────────── */
-function ServiceCard({
-  service,
-}: {
-  service: (typeof services)[0];
-}) {
-  const isWide = service.span === "wide";
+function ServiceCard({ s, index }: { s: (typeof services)[0]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
     <motion.div
-      className="service-card group relative overflow-hidden rounded-2xl"
-      style={{
-        gridColumn: isWide ? "span 2" : "span 1",
-        height: isWide ? "360px" : "360px",
-        background: "oklch(98.5% 0.005 78 / 0.85)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
-        border: "1px solid oklch(100% 0 0 / 0.7)",
-        boxShadow:
-          "0 2px 12px oklch(14% 0.012 260 / 0.05), inset 0 1px 0 oklch(100% 0 0 / 0.9)",
-        cursor: "pointer",
-      }}
-      whileHover={{
-        y: -6,
-        scale: 1.015,
-        boxShadow:
-          "0 20px 60px oklch(14% 0.012 260 / 0.12), inset 0 1px 0 oklch(100% 0 0 / 0.9)",
-        transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
-      }}
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease, delay: (index % 3) * 0.07 }}
+      className="flex flex-col gap-4 sm:gap-5
+                 p-6 sm:p-7 md:p-8
+                 bg-white rounded-lg group
+                 hover:shadow-[0_12px_36px_rgba(11,107,130,0.08)]
+                 hover:-translate-y-1 transition-all duration-300 cursor-default"
+      style={{ border: "1px solid #E2E8F0" }}
     >
-      {/* ── WIDE: side-by-side layout ── */}
-      {isWide ? (
-        <div className="flex h-full">
-          {/* Text side */}
-          <div className="flex flex-col justify-between p-8 flex-1 relative z-10">
-            {/* Watermark number */}
-            <span
-              className="absolute top-4 right-4 font-display font-black select-none pointer-events-none"
-              style={{
-                fontSize: "7rem",
-                lineHeight: 1,
-                letterSpacing: "-0.06em",
-                color: "oklch(14% 0.012 260 / 0.04)",
-              }}
-            >
-              {service.number}
-            </span>
-
-            {/* Top */}
-            <div className="flex flex-col gap-4">
-              {/* Slanted tag */}
-              <div style={{ display: "inline-block", transform: "skewX(-10deg)", width: "fit-content" }}>
-                <span
-                  className="font-mono text-[10px] uppercase font-semibold"
-                  style={{
-                    display: "inline-block",
-                    transform: "skewX(10deg)",
-                    letterSpacing: "0.18em",
-                    color: "oklch(35% 0.01 260)",
-                    background: "oklch(92% 0.01 70)",
-                    border: "1px solid oklch(84% 0.01 70)",
-                    padding: "3px 10px",
-                  }}
-                >
-                  {service.sub}
-                </span>
-              </div>
-
-              <h3
-                className="font-display font-black text-stone-900 leading-tight"
-                style={{ fontSize: "clamp(1.6rem, 2.5vw, 2.4rem)", letterSpacing: "-0.04em" }}
-              >
-                {service.title}
-              </h3>
-
-              <p className="text-[14px] leading-relaxed text-stone-500" style={{ maxWidth: "38ch" }}>
-                {service.desc}
-              </p>
-            </div>
-
-            {/* Bottom CTA */}
-            <motion.button
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-[13px] font-semibold text-stone-900 w-fit"
-              style={{ background: "#EBFFB3" }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Explore Service
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </motion.button>
-          </div>
-
-          {/* Image side */}
-          <div className="w-[42%] relative overflow-hidden">
-            <Image
-              src={service.img}
-              alt={service.title}
-              fill
-              sizes="400px"
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+      <div className="flex items-start justify-between">
+        <span className="font-mono text-[10px] text-[#C0CDD8] tracking-[0.15em]">{s.n}</span>
+        <div
+          className="w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          style={{ background: "#0B6B82" }}
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path
+              d="M2 5h6M5 2l3 3-3 3"
+              stroke="white"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
-            {/* Fade edge */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(to right, oklch(98.5% 0.005 78 / 0.9) 0%, transparent 35%)",
-              }}
-            />
-          </div>
+          </svg>
         </div>
-      ) : (
-        /* ── NORMAL: image bg + text overlay ── */
-        <div className="relative h-full flex flex-col justify-between p-6">
-          {/* Background image */}
-          <div className="absolute inset-0">
-            <Image
-              src={service.img}
-              alt={service.title}
-              fill
-              sizes="400px"
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(to bottom, rgba(250,249,246,0.65) 0%, rgba(250,249,246,0.2) 30%, rgba(4,7,15,0.75) 100%)",
-              }}
-            />
-          </div>
+      </div>
 
-          {/* Watermark */}
-          <span
-            className="absolute top-3 right-4 font-display font-black select-none pointer-events-none z-10"
-            style={{
-              fontSize: "5rem",
-              lineHeight: 1,
-              letterSpacing: "-0.06em",
-              color: "rgba(255,255,255,0.08)",
-            }}
-          >
-            {service.number}
-          </span>
+      <div>
+        <h3
+          className="font-display font-bold text-[#0C0E12] leading-tight mb-1.5"
+          style={{ fontSize: "18px", letterSpacing: "-0.02em" }}
+        >
+          {s.title}
+        </h3>
+        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#94A3B8]">
+          {s.sub}
+        </p>
+      </div>
 
-          {/* Top badge */}
-          <div className="relative z-10">
-            <div style={{ display: "inline-block", transform: "skewX(-10deg)", width: "fit-content" }}>
-              <span
-                className="font-mono text-[10px] uppercase font-semibold"
-                style={{
-                  display: "inline-block",
-                  transform: "skewX(10deg)",
-                  letterSpacing: "0.18em",
-                  color: "oklch(20% 0.01 260)",
-                  background: "rgba(255,255,255,0.75)",
-                  border: "1px solid rgba(255,255,255,0.5)",
-                  backdropFilter: "blur(8px)",
-                  padding: "3px 10px",
-                }}
-              >
-                {service.sub}
-              </span>
-            </div>
-          </div>
+      <p className="text-[14px] leading-[1.75] text-[#566070]">{s.desc}</p>
 
-          {/* Bottom content */}
-          <div className="relative z-10 flex flex-col gap-2">
-            <h3
-              className="font-display font-black text-white leading-tight"
-              style={{ fontSize: "clamp(1.4rem, 2vw, 1.9rem)", letterSpacing: "-0.04em" }}
-            >
-              {service.title}
-            </h3>
-            <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.75)", maxWidth: "30ch" }}>
-              {service.desc}
-            </p>
-            <motion.button
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-[12px] font-semibold text-stone-900 mt-1 w-fit"
-              style={{ background: "#EBFFB3" }}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Explore →
-            </motion.button>
-          </div>
-        </div>
-      )}
+      <div
+        className="mt-auto h-[1.5px] w-0 group-hover:w-10 transition-all duration-300 rounded-full"
+        style={{ background: "#0B6B82" }}
+      />
     </motion.div>
   );
 }
 
-/* ── MAIN ─────────────────────────────────────────────────────────── */
 export default function ServicesSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const titleRef   = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      /* Word reveal on headline */
-      if (titleRef.current) {
-        gsap.fromTo(
-          titleRef.current.querySelectorAll(".word"),
-          { y: 70, opacity: 0, rotateX: -35 },
-          {
-            y: 0, opacity: 1, rotateX: 0,
-            stagger: 0.09, duration: 0.85, ease: "power4.out",
-            scrollTrigger: { trigger: titleRef.current, start: "top 85%" },
-          }
-        );
-      }
-
-      /* Cards clip-path wipe */
-      gsap.utils.toArray<HTMLElement>(".service-card").forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          { clipPath: "inset(100% 0% 0% 0%)", y: 30 },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            y: 0,
-            duration: 1.0,
-            ease: "power4.out",
-            delay: (i % 3) * 0.1,
-            scrollTrigger: { trigger: card, start: "top 90%", toggleActions: "play none none none" },
-          }
-        );
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
     <section
-      ref={sectionRef}
-      className="w-full py-24 px-8"
-      style={{ background: "oklch(96.5% 0.007 78)" }}
+      id="services"
+      className="w-full"
+      style={{ background: "#F4F7FA", borderTop: "1px solid #E2E8F0" }}
     >
-      <div className="max-w-[1320px] mx-auto flex flex-col gap-14">
-
+      <div
+        className="max-w-[1280px] mx-auto
+                   px-5 sm:px-8 md:px-12 lg:px-20
+                   pt-20 sm:pt-24 md:pt-28 lg:pt-32
+                   pb-20 sm:pb-24 md:pb-28 lg:pb-32"
+      >
         {/* Header */}
-        <div className="flex items-end justify-between gap-8">
+        <motion.div
+          ref={headerRef}
+          initial={{ opacity: 0, y: 20 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.65, ease }}
+          className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16"
+        >
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-stone-400 mb-4">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
               Our Services
             </p>
-            <div
-              ref={titleRef}
-              className="font-display font-black text-stone-900 leading-none"
+            <h2
+              className="font-display font-black text-[#0C0E12] leading-[1.0]"
               style={{
-                fontSize: "clamp(2.8rem, 5vw, 5.5rem)",
-                letterSpacing: "-0.04em",
-                perspective: "600px",
+                fontSize: "clamp(2.4rem, 4.5vw, 4.5rem)",
+                letterSpacing: "-0.035em",
               }}
             >
-              {["What", "We", "Do"].map((word) => (
-                <span
-                  key={word}
-                  className="word inline-block mr-[0.2em]"
-                >
-                  {word}
-                </span>
-              ))}
-            </div>
-
-            {/* Expanding gradient line */}
-            <div
-              className="mt-5 h-px"
-              style={{
-                width: "220px",
-                background: "linear-gradient(to right, oklch(14% 0.012 260), oklch(88% 0.008 80))",
-              }}
-            />
+              What We Build
+            </h2>
           </div>
 
           <p
-            className="text-stone-500 text-[15px] leading-relaxed hidden md:block"
-            style={{ maxWidth: "36ch" }}
+            className="text-[16px] leading-[1.75] text-[#566070] hidden md:block"
+            style={{ maxWidth: "44ch" }}
           >
-            Six interconnected domains. Each one a discipline in its own right. All of them available through a single trusted partner.
+            Six interconnected domains. Each one a discipline in its own right.
+            All available through a single trusted partner.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Bento grid */}
-        <div
-          className="grid gap-4"
-          style={{ gridTemplateColumns: "1fr 1fr 1fr" }}
-        >
-          {services.map((s) => (
-            <ServiceCard key={s.number} service={s} />
+        {/* Grid — gapped cards, no shared borders */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {services.map((s, i) => (
+            <ServiceCard key={s.n} s={s} index={i} />
           ))}
         </div>
 
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex justify-center mt-14"
+        >
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-3 px-8 py-4 text-[15px] font-semibold text-white rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
+            style={{ background: "#0B6B82" }}
+          >
+            Work with MG<AnimatedX />
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path
+                d="M2.5 7h9M8 3.5L11.5 7 8 10.5"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+        </motion.div>
       </div>
     </section>
   );

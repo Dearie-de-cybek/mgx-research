@@ -35,9 +35,17 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MGX Research — From Insight to Impact",
+  title: "MGX — From Insight to Impact",
   description:
-    "MexyGabriel (MGX) is a technology solutions company bridging research and real-world impact across AI, Security, Automation, and more.",
+    "MexyGabriel (MGX) is Africa's premier ecosystem for research, technology, innovation and entrepreneurship. Enugu, Nigeria.",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover" as const,
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({
@@ -50,7 +58,7 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col overflow-x-clip">{children}</body>
     </html>
   );
 }

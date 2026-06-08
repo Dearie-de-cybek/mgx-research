@@ -1,220 +1,224 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { slides } from "@/components/HeroCarousel";
+import { motion } from "framer-motion";
+import AnimatedX from "./AnimatedX";
 
 const ease = [0.23, 1, 0.32, 1] as const;
-const INTERVAL = 6500;
-const TAGS = ["Vision", "Strategy", "Execution"];
 
-/* ── SVG grain data URI ─────────────────────────────────────────── */
-const grainSVG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`;
+/* ── Soft floating orb ───────────────────────────────────────────── */
+function Orb({
+  className,
+  color,
+  delay = 0,
+  opacity = 0.16,
+}: {
+  className: string;
+  color: string;
+  delay?: number;
+  opacity?: number;
+}) {
+  return (
+    <motion.div
+      className={className}
+      style={{
+        background: color,
+        filter: "blur(140px)",
+        zIndex: 2,
+        opacity,
+      }}
+      animate={{
+        scale: [1, 1.18, 1],
+        opacity: [opacity * 0.7, opacity, opacity * 0.7],
+      }}
+      transition={{
+        duration: 14,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay,
+      }}
+    />
+  );
+}
 
 export default function HeroSection() {
-  const [index, setIndex] = useState(0);
-
-  /* Auto-advance slides */
-  useEffect(() => {
-    const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), INTERVAL);
-    return () => clearInterval(t);
-  }, []);
-
   return (
-    <section className="relative w-full min-h-screen overflow-hidden flex items-center">
-
-      {/* ── LAYER 0: dark gradient base ── */}
+    <section
+      className="relative w-full flex items-center overflow-hidden"
+      style={{
+        background: "#FFFFFF",
+        minHeight: "100svh", // small viewport height — accounts for mobile browser chrome
+      }}
+    >
+      {/* Layer 1: wash */}
       <div
         className="absolute inset-0"
         style={{
-          background: "linear-gradient(135deg, #06090f 0%, #0b1220 45%, #080d18 75%, #06090f 100%)",
-          zIndex: 0,
+          background:
+            "linear-gradient(180deg, #FFFFFF 0%, #F7FAFC 60%, #FFFFFF 100%)",
+          zIndex: 1,
         }}
       />
 
-      {/* ── LAYER 1: video ── */}
-      <video
-        className="absolute inset-0 w-full h-full"
-        style={{ objectFit: "cover", opacity: 0.65, zIndex: 1 }}
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        <source src="/videos/tech2.mp4" type="video/mp4" />
-      </video>
-
-      {/* ── LAYER 2: dark overlay so text always readable ── */}
-      <div
-        className="absolute inset-0"
-        style={{ background: "rgba(4,7,15,0.55)", zIndex: 2 }}
+      {/* Layer 2: orbs — scale down on mobile so they don't dominate */}
+      <Orb
+        className="absolute top-[-20%] right-[-25%] w-[80vw] sm:w-[70vw] md:w-[60vw] h-[80vw] sm:h-[70vw] md:h-[60vw] rounded-full"
+        color="#0B6B82"
+        delay={0}
+        opacity={0.14}
+      />
+      <Orb
+        className="absolute bottom-[-25%] left-[-20%] w-[70vw] sm:w-[60vw] md:w-[50vw] h-[70vw] sm:h-[60vw] md:h-[50vw] rounded-full"
+        color="#2CBF68"
+        delay={5}
+        opacity={0.1}
       />
 
-      {/* ── LAYER 3: brand colour glows ── */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3 }}>
-        <div className="absolute top-[-15%] right-[-8%] w-175 h-175 rounded-full blur-[140px]"
-          style={{ background: "#3B9FE8", opacity: 0.08 }} />
-        <div className="absolute bottom-[-10%] left-[-5%] w-150 h-150 rounded-full blur-[120px]"
-          style={{ background: "#3DBE6E", opacity: 0.06 }} />
-      </div>
-
-      {/* ── LAYER 4: grain ── */}
+      {/* Content — responsive padding ladder */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="relative w-full mx-auto flex flex-col items-start
+                   px-5 sm:px-8 md:px-12 lg:px-20
+                   pt-28 sm:pt-32 md:pt-36 lg:pt-44
+                   pb-20 sm:pb-24 md:pb-28 lg:pb-32"
         style={{
-          backgroundImage: grainSVG,
-          backgroundRepeat: "repeat",
-          backgroundSize: "300px 300px",
-          opacity: 0.15,
-          mixBlendMode: "overlay",
-          zIndex: 4,
+          zIndex: 10,
+          maxWidth: "1280px",
         }}
-      />
-
-      {/* ════════════════════════════════════════════════════════════
-          CONTENT
-      ════════════════════════════════════════════════════════════ */}
-      <div
-        className="relative w-full mx-auto px-8 flex items-center justify-between gap-4"
-        style={{ zIndex: 10, maxWidth: "1320px", paddingTop: "12rem", paddingBottom: "5rem" }}
       >
-        {/* ── TEXT ── */}
-        <div className="flex flex-col gap-6 flex-1">
-
-          {/* Eyebrow badge */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`eyebrow-${index}`}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.4, ease }}
-              className="inline-block"
-            >
-              <div
-                style={{
-                  display: "inline-block",
-                  transform: "skewX(-12deg)",
-                  background: "#EBFFB3",
-                  border: "1px solid rgba(235,255,179,0.6)",
-                  padding: "5px 18px",
-                }}
-              >
-                <span
-                  className="font-mono text-[11px] uppercase text-stone-900"
-                  style={{
-                    display: "inline-block",
-                    transform: "skewX(12deg)",
-                    letterSpacing: "0.22em",
-                  }}
-                >
-                  {slides[index].eyebrow}
-                </span>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Headline */}
-          <AnimatePresence mode="wait">
-            <motion.h1
-              key={`headline-${index}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease, delay: 0.05 }}
-              className="font-display font-black text-white"
-              style={{
-                fontSize: "clamp(3rem, 5.5vw, 6.5rem)",
-                lineHeight: 0.93,
-                letterSpacing: "-0.04em",
-                whiteSpace: "pre-line",
-              }}
-            >
-              {slides[index].headline}
-            </motion.h1>
-          </AnimatePresence>
-
-          {/* Subtitle */}
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={`sub-${index}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4, ease, delay: 0.1 }}
-              className="text-[20px] leading-[1.7] text-whitesmoke"
-              style={{ maxWidth: "42ch" }}
-            >
-              {slides[index].sub}
-            </motion.p>
-          </AnimatePresence>
-
-          {/* CTAs — more breathing room from subtitle */}
-          <div className="flex items-center gap-3 pt-12">
-            <a
-              href="#services"
-              className="px-6 py-3 rounded-md text-[15px] font-semibold text-stone-900 transition-all duration-150 hover:brightness-95 active:scale-[0.97]"
-              style={{ background: "#EBFFB3" }}
-            >
-              Explore Solutions
-            </a>
-            <a
-              href="#campus"
-              className="px-6 py-3 rounded-md text-[15px] font-semibold text-white border border-white/25 hover:border-white/50 transition-all duration-150"
-            >
-              MGX Campus →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* ════════════════════════════════════════════════════════════
-          TAGS — bottom right, row
-      ════════════════════════════════════════════════════════════ */}
-      <div className="absolute bottom-10 right-8 z-10 flex flex-row items-center gap-2">
-        {TAGS.map((tag, i) => (
-          <motion.span
-            key={tag}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.12 + 0.6, duration: 0.45, ease }}
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease, delay: 0.05 }}
+          className="flex items-center gap-2.5 sm:gap-3 mb-8 sm:mb-10 md:mb-14"
+        >
+          <span
+            className="w-1.5 h-1.5 rounded-full shrink-0"
             style={{
-              display: "inline-block",
-              background: "rgba(0,0,0,0.45)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              padding: "5px 14px",
-              borderRadius: "4px",
-              color: "rgba(255,255,255,0.75)",
-              fontSize: "11px",
-              fontFamily: "var(--mono-font)",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
+              background: "#2CBF68",
+              boxShadow: "0 0 12px rgba(44,191,104,0.55)",
+            }}
+          />
+          <span
+            className="font-mono uppercase
+                       text-[10px] sm:text-[11px]
+                       tracking-[0.22em] sm:tracking-[0.3em]"
+            style={{ color: "#566070" }}
+          >
+            Enugu, Nigeria · Est. 2019
+          </span>
+        </motion.div>
+
+        {/* Headline — fluid clamp tuned per breakpoint */}
+        <div
+          className="font-display font-black w-full"
+          style={{
+            fontSize: "clamp(2.5rem, 11vw, 9rem)",
+            lineHeight: 0.92,
+            letterSpacing: "-0.04em",
+            color: "#0C0E12",
+          }}
+        >
+          {["From", "Insight"].map((w, i) => (
+            <motion.span
+              key={w}
+              className="inline-block mr-[0.22em]"
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, ease, delay: 0.18 + i * 0.07 }}
+            >
+              {w}
+            </motion.span>
+          ))}
+          <br />
+          <motion.span
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease, delay: 0.4 }}
+            className="inline-block mr-[0.22em]"
+          >
+            to{" "}
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease, delay: 0.5 }}
+            className="inline-block"
+            style={{
+              background: "linear-gradient(135deg, #0B6B82 10%, #2CBF68 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
-            {tag}
+            Impact.
           </motion.span>
-        ))}
-      </div>
+        </div>
 
-      {/* ════════════════════════════════════════════════════════════
-          SLIDE INDICATORS — bottom centre
-      ════════════════════════════════════════════════════════════ */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2.5 z-10">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            aria-label={`Slide ${i + 1}`}
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease, delay: 0.7 }}
+          className="mt-7 sm:mt-9 md:mt-10
+                     text-[15px] sm:text-[16px] md:text-[18px]
+                     leading-[1.7] sm:leading-[1.75] md:leading-[1.8]"
+          style={{ color: "#566070", maxWidth: "52ch" }}
+        >
+          Africa's premier ecosystem for research, technology, innovation
+          and entrepreneurship. We turn rigorous thinking into systems that
+          serve real human needs — at scale.
+        </motion.p>
+
+        {/* CTAs — stack on xs, inline from sm+ */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease, delay: 0.85 }}
+          className="flex flex-col sm:flex-row sm:items-center
+                     gap-3 sm:gap-5 md:gap-6
+                     mt-9 sm:mt-11 md:mt-12
+                     w-full sm:w-auto"
+        >
+          <a
+            href="#research"
+            className="group inline-flex items-center justify-center sm:justify-start gap-3
+                       w-full sm:w-auto
+                       px-6 sm:px-7 py-3.5
+                       text-[14px] sm:text-[15px] font-semibold text-white
+                       rounded-md transition-all hover:opacity-95 active:scale-[0.97]"
+            style={{
+              background: "#0B6B82",
+              boxShadow: "0 10px 28px rgba(11,107,130,0.22)",
+            }}
           >
-            <motion.div
-              animate={{ width: i === index ? 28 : 6, opacity: i === index ? 1 : 0.3 }}
-              transition={{ duration: 0.3 }}
-              className="h-0.75 rounded-full bg-white"
-            />
-          </button>
-        ))}
+            Explore the Research
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              <path
+                d="M2.5 7h9M8 3.5L11.5 7 8 10.5"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+          <a
+            href="#campus"
+            className="inline-flex items-center justify-center sm:justify-start
+                       text-[14px] sm:text-[15px] font-medium
+                       hover:underline underline-offset-4 transition-all
+                       py-2 sm:py-0"
+            style={{ color: "#0C0E12" }}
+          >
+            Visit MG<AnimatedX /> Campus →
+          </a>
+        </motion.div>
       </div>
     </section>
   );
