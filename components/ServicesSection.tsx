@@ -1,187 +1,241 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import AnimatedX from "./AnimatedX";
-
-const ease = [0.23, 1, 0.32, 1] as const;
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const services = [
   {
     n: "01",
     title: "Intelligence Systems",
-    sub: "AI · ML · Data Analytics · SaaS",
-    desc: "We turn raw data into decisions. Custom AI models, real-time analytics, and intelligent dashboards that adapt to how your business actually operates.",
+    tags: ["AI & ML", "Analytics"],
+    desc: "Custom AI models and analytics pipelines that adapt to real operational data — not vendor assumptions.",
+    img: "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=600",
+    color: "#0B6B82",
+    gradient: "from-[#0B6B82]/18 via-[#0B6B82]/5 to-[#2CBF68]/8",
+    border: "border-[#0B6B82]/35",
+    shadow: "shadow-[0_20px_50px_rgba(11,107,130,0.06)]",
   },
   {
     n: "02",
     title: "Security & Resilience",
-    sub: "Cybersecurity · Managed IT · Threat Intel",
-    desc: "Proactive defence across your entire digital surface. Zero-trust architecture, 24/7 monitoring and incident response — so a breach stays a near-miss.",
+    tags: ["Zero-Trust", "Threat Intel"],
+    desc: "Zero-trust architecture, 24/7 monitoring, and incident response for high-risk environments.",
+    img: "https://images.pexels.com/photos/323311/pexels-photo-323311.jpeg?auto=compress&cs=tinysrgb&w=600",
+    color: "#2CBF68",
+    gradient: "from-[#2CBF68]/18 via-[#2CBF68]/5 to-[#3B9FE8]/8",
+    border: "border-[#2CBF68]/35",
+    shadow: "shadow-[0_20px_50px_rgba(44,191,104,0.06)]",
   },
   {
     n: "03",
     title: "Automation & Robotics",
-    sub: "RPA · Robotics · Process Intelligence",
-    desc: "Eliminate work that shouldn't need a human. We design automation that scales  from front-office workflows to factory floor robotics.",
+    tags: ["RPA", "Control Logic"],
+    desc: "Eliminate repeatable work. From front-office workflows to factory floor robotics.",
+    img: "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=600",
+    color: "#3B9FE8",
+    gradient: "from-[#3B9FE8]/18 via-[#3B9FE8]/5 to-[#0B6B82]/8",
+    border: "border-[#3B9FE8]/35",
+    shadow: "shadow-[0_20px_50px_rgba(59,159,232,0.06)]",
   },
   {
     n: "04",
     title: "Digital Infrastructure",
-    sub: "Cloud · Enterprise · Custom Software",
-    desc: "We architect cloud environments, enterprise platforms and custom software built for reliability at scale  without locking you into a single vendor.",
+    tags: ["Cloud", "APIs & Apps"],
+    desc: "Cloud environments and custom enterprise platforms built for reliability at scale — no vendor lock-in.",
+    img: "https://images.pexels.com/photos/442150/pexels-photo-442150.jpeg?auto=compress&cs=tinysrgb&w=600",
+    color: "#0E90A8",
+    gradient: "from-[#0E90A8]/18 via-[#0E90A8]/5 to-[#2CBF68]/8",
+    border: "border-[#0E90A8]/35",
+    shadow: "shadow-[0_20px_50px_rgba(14,144,168,0.06)]",
   },
   {
     n: "05",
-    title: "Governance & Smart Systems",
-    sub: "E-Governance · Smart Cities · Urban Tech",
-    desc: "Technology that serves the public good. From citizen portals to smart city infrastructure  systems designed for the people who use them every day.",
+    title: "Governance Systems",
+    tags: ["E-Gov", "Smart Cities"],
+    desc: "Citizen portals and smart infrastructure designed first for the people who use them daily.",
+    img: "https://images.pexels.com/photos/3183158/pexels-photo-3183158.jpeg?auto=compress&cs=tinysrgb&w=600",
+    color: "#0B6B82",
+    gradient: "from-[#0B6B82]/18 via-[#0B6B82]/5 to-[#3B9FE8]/8",
+    border: "border-[#0B6B82]/35",
+    shadow: "shadow-[0_20px_50px_rgba(11,107,130,0.06)]",
   },
   {
     n: "06",
-    title: "Human-Centered Innovation",
-    sub: "HealthTech · EdTech · UX Design",
-    desc: "Innovation with the human in the room. We build health, education and service platforms designed for real people, real constraints, real communities.",
+    title: "Human Innovation",
+    tags: ["Health & EdTech", "UX Design"],
+    desc: "Health, education, and service platforms designed for real constraints and real communities.",
+    img: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=600",
+    color: "#2CBF68",
+    gradient: "from-[#2CBF68]/18 via-[#2CBF68]/5 to-[#0E90A8]/8",
+    border: "border-[#2CBF68]/35",
+    shadow: "shadow-[0_20px_50px_rgba(44,191,104,0.06)]",
   },
 ];
 
-function ServiceCard({ s, index }: { s: (typeof services)[0]; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease, delay: (index % 3) * 0.07 }}
-      className="flex flex-col gap-4 sm:gap-5
-                 p-6 sm:p-7 md:p-8
-                 bg-white rounded-lg group
-                 hover:shadow-[0_12px_36px_rgba(11,107,130,0.08)]
-                 hover:-translate-y-1 transition-all duration-300 cursor-default"
-      style={{ border: "1px solid #E2E8F0" }}
-    >
-      <div className="flex items-start justify-between">
-        <span className="font-mono text-xs text-[#C0CDD8] tracking-[0.15em]">{s.n}</span>
-        <div
-          className="w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          style={{ background: "#0B6B82" }}
-        >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <path
-              d="M2 5h6M5 2l3 3-3 3"
-              stroke="white"
-              strokeWidth="1.3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      </div>
-
-      <div>
-        <h3
-          className="font-display font-bold text-[#0C0E12] leading-tight mb-1.5"
-          style={{ fontSize: "20px", letterSpacing: "-0.02em" }}
-        >
-          {s.title}
-        </h3>
-        <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#94A3B8]">
-          {s.sub}
-        </p>
-      </div>
-
-      <p className="text-base leading-[1.75] text-[#566070]">{s.desc}</p>
-
-      <div
-        className="mt-auto h-[1.5px] w-0 group-hover:w-10 transition-all duration-300 rounded-full"
-        style={{ background: "#0B6B82" }}
-      />
-    </motion.div>
-  );
-}
-
 export default function ServicesSection() {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
+  const targetRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+  });
+
+  // Scroll mapping for desktop (horizontal slide of cards)
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-70%"]);
 
   return (
     <section
+      ref={targetRef}
       id="services"
-      className="w-full"
-      style={{ background: "#F4F7FA", borderTop: "1px solid #E2E8F0" }}
+      className="relative w-full bg-[#F8FAFC] md:h-[300vh]"
+      style={{ borderTop: "1px solid #E2E8F0" }}
     >
-      <div
-        className="max-w-[1280px] mx-auto
-                   px-5 sm:px-8 md:px-12 lg:px-20
-                   pt-20 sm:pt-24 md:pt-28 lg:pt-32
-                   pb-20 sm:pb-24 md:pb-28 lg:pb-32"
-      >
-        {/* Header */}
-        <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.65, ease }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16"
-        >
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
-              Our Services
-            </p>
-            <h2
-              className="font-display font-black text-[#0C0E12] leading-[1.0]"
-              style={{
-                fontSize: "clamp(2.4rem, 4.5vw, 4.5rem)",
-                letterSpacing: "-0.035em",
-              }}
-            >
-              What We Build
-            </h2>
-          </div>
-
-          <p
-            className="text-lg leading-[1.75] text-[#566070] hidden md:block"
-            style={{ maxWidth: "44ch" }}
-          >
-            Six interconnected domains. Each one a discipline in its own right.
-            All available through a single trusted partner.
+      {/* Viewport container pinned during vertical scroll */}
+      <div className="md:sticky md:top-0 md:h-screen flex flex-col justify-center overflow-hidden py-16 sm:py-20 md:py-0">
+        <div className="max-w-[1280px] mx-auto w-full px-5 sm:px-8 md:px-12 lg:px-20 mb-8 md:mb-12 shrink-0">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-4">
+            Capabilities
           </p>
-        </motion.div>
-
-        {/* Grid — gapped cards, no shared borders */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {services.map((s, i) => (
-            <ServiceCard key={s.n} s={s} index={i} />
-          ))}
+          <h2 className="font-display font-black text-[#0C0E12] uppercase tracking-tighter leading-none select-none text-[clamp(3rem,8vw,6.5rem)]">
+            Services
+          </h2>
         </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex justify-center mt-14"
-        >
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold text-white rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
-            style={{ background: "#0B6B82" }}
+        {/* Desktop horizontal track */}
+        <div className="hidden md:block w-full">
+          <motion.div
+            style={{ x }}
+            className="flex gap-8 pl-[35vw] pr-12 lg:pr-20"
           >
-            Work with MG<AnimatedX />
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path
-                d="M2.5 7h9M8 3.5L11.5 7 8 10.5"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
-        </motion.div>
+            {services.map((s) => (
+              <div
+                key={s.n}
+                className={`group w-[440px] lg:w-[480px] shrink-0 bg-gradient-to-br ${s.gradient} backdrop-blur-md border ${s.border} rounded-3xl flex flex-col h-[460px] lg:h-[500px] ${s.shadow} overflow-hidden transition-all duration-500 hover:-translate-y-2 cursor-pointer`}
+              >
+                {/* Top card layout: full-bleed image container */}
+                <div className="relative w-full h-[200px] lg:h-[230px] overflow-hidden shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={s.img}
+                    alt={s.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                  
+                  {/* Floating Tags and Arrow on image */}
+                  <div className="absolute top-5 left-5 flex gap-2">
+                    {s.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="font-mono text-[9px] uppercase tracking-[0.12em] px-3 py-1 bg-white/95 backdrop-blur-sm rounded-full border border-white/85 shadow-sm"
+                        style={{ color: s.color }}
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div
+                    className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                    style={{ color: s.color }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="7" y1="17" x2="17" y2="7"></line>
+                      <polyline points="7 7 17 7 17 17"></polyline>
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Divider border */}
+                <div className={`w-full h-[1px] border-b ${s.border} opacity-80`} />
+
+                {/* Bottom card content */}
+                <div className="p-7 lg:p-8 relative flex-1 flex flex-col justify-start overflow-hidden">
+                  {/* Huge background watermark number */}
+                  <span
+                    className="absolute bottom-2 right-6 font-display font-black leading-none select-none pointer-events-none text-[8.5rem] lg:text-[10rem] tracking-tighter"
+                    style={{ color: s.color, opacity: 0.09 }}
+                  >
+                    {s.n}
+                  </span>
+
+                  <div className="relative z-10 flex flex-col gap-2">
+                    <h3 className="font-display font-bold text-[#0C0E12] text-xl lg:text-2xl tracking-tight">
+                      {s.title}
+                    </h3>
+                    <p className="text-sm lg:text-base leading-[1.6] text-[#566070] max-w-[92%]">
+                      {s.desc}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Mobile touch scroll track (fallback) */}
+        <div className="md:hidden w-full overflow-x-auto scrollbar-none px-5 sm:px-8 flex gap-6 snap-x snap-mandatory pb-6">
+          {services.map((s) => (
+            <div
+              key={s.n}
+              className={`group w-[290px] sm:w-[320px] shrink-0 snap-start bg-gradient-to-br ${s.gradient} border ${s.border} rounded-3xl flex flex-col h-[380px] ${s.shadow} overflow-hidden`}
+            >
+              {/* Full-bleed image top */}
+              <div className="relative w-full h-[160px] overflow-hidden shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={s.img}
+                  alt={s.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                
+                {/* Overlaid tags & arrow */}
+                <div className="absolute top-4 left-4 flex gap-1.5">
+                  {s.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="font-mono text-[8.5px] uppercase tracking-[0.1em] px-2.5 py-1 bg-white/95 backdrop-blur-sm rounded-full border border-white/85 shadow-sm"
+                      style={{ color: s.color }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                <div
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md"
+                  style={{ color: s.color }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Divider border */}
+              <div className={`w-full h-[1px] border-b ${s.border} opacity-80`} />
+
+              {/* Mobile text content */}
+              <div className="p-5 relative flex-1 flex flex-col justify-start overflow-hidden">
+                <span
+                  className="absolute bottom-2 right-4 font-display font-black leading-none select-none pointer-events-none text-[6.5rem] tracking-tighter"
+                  style={{ color: s.color, opacity: 0.09 }}
+                >
+                  {s.n}
+                </span>
+
+                <div className="relative z-10 flex flex-col gap-1.5">
+                  <h3 className="font-display font-bold text-[#0C0E12] text-lg tracking-tight">
+                    {s.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm leading-[1.5] text-[#566070] max-w-[90%]">
+                    {s.desc}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
