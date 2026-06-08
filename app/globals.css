@@ -118,3 +118,27 @@ img, svg, video {
   background-color: rgba(12, 14, 18, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+/* ── ANIMATED TEXT GRADIENT ─────────────────────────────────────── */
+
+@keyframes shifting-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@utility animate-shifting-gradient {
+  background-size: 200% auto;
+  animation: shifting-gradient 6s ease infinite;
+}
+
+/* ── TYPEWRITER CURSOR BLINK ────────────────────────────────────── */
+@keyframes cursor-blink {
+  50% { border-color: transparent; }
+}
+
+@utility animate-blink {
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+
