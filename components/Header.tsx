@@ -66,20 +66,26 @@ export default function Header() {
   /* Tight range 0 → 180px. Only cheap GPU-friendly props. */
   const RANGE: [number, number] = [0, 180];
 
+  /* Glassmorphic morph — translucent from the start (never opaque), heavier
+     blur/saturation, soft inner highlight to read as "frosted glass" rather
+     than a flat white bar sliding in. */
   const navBg = useTransform(
     smoothY,
     RANGE,
-    ["rgba(255,255,255,0.0)", "rgba(255,255,255,0.92)"]
+    ["rgba(255,255,255,0.38)", "rgba(255,255,255,0.6)"]
   );
   const navBorder = useTransform(
     smoothY,
     RANGE,
-    ["rgba(226,232,240,0)", "rgba(226,232,240,1)"]
+    ["rgba(255,255,255,0.5)", "rgba(255,255,255,0.7)"]
   );
   const navShadow = useTransform(
     smoothY,
     RANGE,
-    ["0 0 0 rgba(0,0,0,0)", "0 1px 24px rgba(11,107,130,0.06)"]
+    [
+      "0 8px 32px rgba(11,107,130,0.05), inset 0 1px 0 rgba(255,255,255,0.6)",
+      "0 8px 40px rgba(11,107,130,0.10), inset 0 1px 0 rgba(255,255,255,0.7)",
+    ]
   );
 
   useEffect(() => {
@@ -97,8 +103,8 @@ export default function Header() {
           borderBottom: "1px solid transparent",
           borderBottomColor: navBorder,
           boxShadow: navShadow,
-          backdropFilter: "blur(20px) saturate(160%)",
-          WebkitBackdropFilter: "blur(20px) saturate(160%)",
+          backdropFilter: "blur(28px) saturate(180%)",
+          WebkitBackdropFilter: "blur(28px) saturate(180%)",
           willChange: "background-color, border-color, box-shadow",
         }}
         initial={{ y: -32, opacity: 0 }}
@@ -305,8 +311,8 @@ export default function Header() {
           borderBottom: "1px solid transparent",
           borderBottomColor: navBorder,
           boxShadow: navShadow,
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
+          backdropFilter: "blur(28px) saturate(180%)",
+          WebkitBackdropFilter: "blur(28px) saturate(180%)",
           willChange: "background-color, border-color, box-shadow",
         }}
       >

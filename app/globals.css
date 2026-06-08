@@ -151,5 +151,19 @@ img, svg, video {
   animation: marquee 30s linear infinite;
 }
 
+/* ── TECH GRID & DOT MESHES ─────────────────────────────────────── */
+@utility bg-grid-mesh {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(11, 107, 130, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11, 107, 130, 0.04) 1px, transparent 1px);
+}
+
+@utility bg-dot-mesh {
+  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(11, 107, 130, 0.06) 1px, transparent 1px);
+}
+
+
 
 

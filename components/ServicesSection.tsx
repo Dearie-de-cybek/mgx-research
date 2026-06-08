@@ -80,6 +80,7 @@ export default function ServicesSection() {
 
   // Scroll mapping for desktop (horizontal slide of cards)
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-70%"]);
+  const imgX = useTransform(scrollYProgress, [0, 1], [-35, 35]);
 
   return (
     <section
@@ -112,16 +113,16 @@ export default function ServicesSection() {
               >
                 {/* Top card layout: full-bleed image container */}
                 <div className="relative w-full h-[200px] lg:h-[230px] overflow-hidden shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <motion.img
                     src={s.img}
                     alt={s.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ x: imgX }}
+                    className="absolute inset-y-0 left-[-35px] w-[calc(100%+70px)] h-full object-cover max-w-none transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent z-10 pointer-events-none" />
                   
                   {/* Floating Tags and Arrow on image */}
-                  <div className="absolute top-5 left-5 flex gap-2">
+                  <div className="absolute top-5 left-5 flex gap-2 z-20">
                     {s.tags.map((t) => (
                       <span
                         key={t}
@@ -134,7 +135,7 @@ export default function ServicesSection() {
                   </div>
 
                   <div
-                    className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                    className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 z-20"
                     style={{ color: s.color }}
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -186,10 +187,10 @@ export default function ServicesSection() {
                   alt={s.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 pointer-events-none" />
                 
                 {/* Overlaid tags & arrow */}
-                <div className="absolute top-4 left-4 flex gap-1.5">
+                <div className="absolute top-4 left-4 flex gap-1.5 z-20">
                   {s.tags.map((t) => (
                     <span
                       key={t}
@@ -202,7 +203,7 @@ export default function ServicesSection() {
                 </div>
 
                 <div
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md"
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md z-20"
                   style={{ color: s.color }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
