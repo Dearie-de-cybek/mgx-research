@@ -75,7 +75,7 @@ export default function FooterSection() {
               <MGXLogo />
             </a>
             <p
-              className="text-[15px] leading-[1.75]"
+              className="text-base leading-[1.75]"
               style={{ color: "rgba(255,255,255,0.45)", maxWidth: "38ch" }}
             >
               Africa's premier ecosystem for research, technology, innovation,
@@ -84,21 +84,21 @@ export default function FooterSection() {
 
             {/* Location */}
             <div className="flex flex-col gap-1">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.28)" }}>
+              <p className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.28)" }}>
                 Location
               </p>
-              <p className="text-[14px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+              <p className="text-base" style={{ color: "rgba(255,255,255,0.5)" }}>
                 Enugu, Nigeria · www.mgx.africa
               </p>
             </div>
 
             {/* Newsletter */}
             <div className="mt-2">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] mb-3" style={{ color: "rgba(255,255,255,0.28)" }}>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] mb-3" style={{ color: "rgba(255,255,255,0.28)" }}>
                 Stay Updated
               </p>
               {submitted ? (
-                <p className="text-[14px]" style={{ color: "#2CBF68" }}>
+                <p className="text-base" style={{ color: "#2CBF68" }}>
                   ✓ You're on the list.
                 </p>
               ) : (
@@ -109,7 +109,7 @@ export default function FooterSection() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
                     required
-                    className="flex-1 px-4 py-2.5 text-[14px] rounded-md outline-none transition-all"
+                    className="flex-1 px-4 py-2.5 text-base rounded-md outline-none transition-all"
                     style={{
                       background: "rgba(255,255,255,0.06)",
                       border: "1px solid rgba(255,255,255,0.1)",
@@ -118,7 +118,7 @@ export default function FooterSection() {
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2.5 text-[14px] font-semibold text-white rounded-md hover:opacity-90 transition-opacity"
+                    className="px-4 py-2.5 text-base font-semibold text-white rounded-md hover:opacity-90 transition-opacity"
                     style={{ background: "#0B6B82" }}
                   >
                     →
@@ -131,7 +131,7 @@ export default function FooterSection() {
           {/* Links */}
           {Object.entries(footerLinks).map(([section, links]) => (
             <div key={section} className="flex flex-col gap-4">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: "rgba(255,255,255,0.28)" }}>
+              <p className="font-mono text-xs uppercase tracking-[0.22em]" style={{ color: "rgba(255,255,255,0.28)" }}>
                 {section}
               </p>
               <ul className="flex flex-col gap-3">
@@ -139,7 +139,7 @@ export default function FooterSection() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-[14px] transition-colors duration-150"
+                      className="text-base transition-colors duration-150"
                       style={{ color: "rgba(255,255,255,0.5)" }}
                       onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#FFFFFF")}
                       onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.5)")}
@@ -155,7 +155,7 @@ export default function FooterSection() {
 
         {/* Bottom row */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-7">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.22)" }}>
+          <p className="font-mono text-sm uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.22)" }}>
             © 2025 MexyGabriel (MGX). All rights reserved.
           </p>
           <div className="flex items-center gap-5">
@@ -163,7 +163,7 @@ export default function FooterSection() {
               <a
                 key={label}
                 href="#"
-                className="font-mono text-[10px] uppercase tracking-[0.15em] transition-colors duration-150"
+                className="font-mono text-sm uppercase tracking-[0.15em] transition-colors duration-150"
                 style={{ color: "rgba(255,255,255,0.22)" }}
                 onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.5)")}
                 onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.22)")}

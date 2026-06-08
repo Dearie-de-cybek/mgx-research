@@ -123,7 +123,7 @@ export default function ProductsSection() {
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-14"
         >
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
               Our Platforms
             </p>
             <h2
@@ -140,7 +140,7 @@ export default function ProductsSection() {
             </h2>
           </div>
           <p
-            className="text-[16px] leading-[1.75] text-[#566070] hidden md:block"
+            className="text-lg leading-[1.75] text-[#566070] hidden md:block"
             style={{ maxWidth: "36ch" }}
           >
             Five platforms. Every research pillar covered. One trusted partner.
@@ -166,7 +166,7 @@ export default function ProductsSection() {
                 style={{ outline: "none" }}
               >
                 <span
-                  className="font-mono text-[10px] tracking-[0.15em] transition-colors duration-200"
+                  className="font-mono text-xs tracking-[0.15em] transition-colors duration-200"
                   style={{ color: isActive ? "#0B6B82" : "#C0CDD8" }}
                 >
                   {prod.n}
@@ -233,7 +233,7 @@ export default function ProductsSection() {
             {/* Status badge */}
             <div className="absolute top-5 left-5 z-10">
               <span
-                className="font-mono text-[10px] uppercase tracking-[0.2em] text-white px-3 py-1.5 rounded-sm"
+                className="font-mono text-xs uppercase tracking-[0.2em] text-white px-3 py-1.5 rounded-sm"
                 style={{
                   background: statusColor[p.status],
                   boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
@@ -271,7 +271,7 @@ export default function ProductsSection() {
                 className="flex flex-col gap-6"
               >
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#94A3B8] mb-3">
+                  <p className="font-mono text-xs uppercase tracking-[0.22em] text-[#94A3B8] mb-3">
                     MG<AnimatedX /> {p.name} · {p.tag}
                   </p>
                   <h3
@@ -282,7 +282,7 @@ export default function ProductsSection() {
                   </h3>
                 </div>
 
-                <p className="text-[15px] leading-[1.75] text-[#566070]">{p.desc}</p>
+                <p className="text-base leading-[1.75] text-[#566070]">{p.desc}</p>
 
                 {/* Feature list */}
                 <div className="flex flex-col" style={{ borderTop: "1px solid #EDF2F7" }}>
@@ -296,11 +296,11 @@ export default function ProductsSection() {
                       style={{ borderBottom: "1px solid #EDF2F7" }}
                     >
                       <span
-                        className="font-mono text-[10px] text-[#C0CDD8] w-5 shrink-0"
+                        className="font-mono text-xs text-[#C0CDD8] w-5 shrink-0"
                       >
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="text-[14px] text-[#0C0E12]">{f}</span>
+                      <span className="text-base text-[#0C0E12]">{f}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -308,7 +308,7 @@ export default function ProductsSection() {
                 <div className="flex items-center gap-3 pt-2">
                   <a
                     href="#contact"
-                    className="inline-flex items-center gap-2 px-5 py-3 text-[13px] font-semibold text-white rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
+                    className="inline-flex items-center gap-2 px-5 py-3 text-sm lg:text-base font-semibold text-white rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
                     style={{ background: "#0B6B82" }}
                   >
                     {p.status === "Live" ? "Request Access" : "Join Waitlist"}
@@ -318,7 +318,7 @@ export default function ProductsSection() {
                   </a>
                   <a
                     href="#contact"
-                    className="px-5 py-3 text-[13px] font-semibold text-[#0B6B82] hover:underline underline-offset-4 transition-all"
+                    className="px-5 py-3 text-sm lg:text-base font-semibold text-[#0B6B82] hover:underline underline-offset-4 transition-all"
                   >
                     Talk to us →
                   </a>

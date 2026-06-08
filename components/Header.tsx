@@ -104,7 +104,7 @@ export default function Header() {
                 key={link.label}
                 href={link.href}
                 className="px-3 lg:px-5 py-2
-                           text-[14px] lg:text-[15px] font-medium
+                           text-base font-medium
                            rounded-md transition-colors duration-200 hover:text-[#0C0E12]"
                 style={{ color: "#566070" }}
               >
@@ -116,7 +116,7 @@ export default function Header() {
           <a
             href="#contact"
             className="shrink-0 px-4 lg:px-5 py-2.5
-                       text-[13px] lg:text-[14px] font-semibold text-white
+                       text-sm lg:text-base font-semibold text-white
                        rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
             style={{ background: "#0B6B82" }}
           >
@@ -206,13 +206,13 @@ export default function Header() {
               className="px-6 pb-10 pt-6"
               style={{ borderTop: "1px solid #E2E8F0" }}
             >
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] mb-3">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#94A3B8] mb-3">
                 Enugu, Nigeria · www.mgx.africa
               </p>
               <a
                 href="#contact"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-center w-full py-4 text-[15px] font-semibold text-white rounded-md hover:opacity-90 transition-opacity"
+                className="flex items-center justify-center w-full py-4 text-base font-semibold text-white rounded-md hover:opacity-90 transition-opacity"
                 style={{ background: "#0B6B82" }}
               >
                 Book a Call

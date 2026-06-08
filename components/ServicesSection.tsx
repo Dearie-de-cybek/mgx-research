@@ -23,19 +23,19 @@ const services = [
     n: "03",
     title: "Automation & Robotics",
     sub: "RPA · Robotics · Process Intelligence",
-    desc: "Eliminate work that shouldn't need a human. We design automation that scales — from front-office workflows to factory floor robotics.",
+    desc: "Eliminate work that shouldn't need a human. We design automation that scales  from front-office workflows to factory floor robotics.",
   },
   {
     n: "04",
     title: "Digital Infrastructure",
     sub: "Cloud · Enterprise · Custom Software",
-    desc: "We architect cloud environments, enterprise platforms and custom software built for reliability at scale — without locking you into a single vendor.",
+    desc: "We architect cloud environments, enterprise platforms and custom software built for reliability at scale  without locking you into a single vendor.",
   },
   {
     n: "05",
     title: "Governance & Smart Systems",
     sub: "E-Governance · Smart Cities · Urban Tech",
-    desc: "Technology that serves the public good. From citizen portals to smart city infrastructure — systems designed for the people who use them every day.",
+    desc: "Technology that serves the public good. From citizen portals to smart city infrastructure  systems designed for the people who use them every day.",
   },
   {
     n: "06",
@@ -63,7 +63,7 @@ function ServiceCard({ s, index }: { s: (typeof services)[0]; index: number }) {
       style={{ border: "1px solid #E2E8F0" }}
     >
       <div className="flex items-start justify-between">
-        <span className="font-mono text-[10px] text-[#C0CDD8] tracking-[0.15em]">{s.n}</span>
+        <span className="font-mono text-xs text-[#C0CDD8] tracking-[0.15em]">{s.n}</span>
         <div
           className="w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           style={{ background: "#0B6B82" }}
@@ -83,16 +83,16 @@ function ServiceCard({ s, index }: { s: (typeof services)[0]; index: number }) {
       <div>
         <h3
           className="font-display font-bold text-[#0C0E12] leading-tight mb-1.5"
-          style={{ fontSize: "18px", letterSpacing: "-0.02em" }}
+          style={{ fontSize: "20px", letterSpacing: "-0.02em" }}
         >
           {s.title}
         </h3>
-        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#94A3B8]">
+        <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#94A3B8]">
           {s.sub}
         </p>
       </div>
 
-      <p className="text-[14px] leading-[1.75] text-[#566070]">{s.desc}</p>
+      <p className="text-base leading-[1.75] text-[#566070]">{s.desc}</p>
 
       <div
         className="mt-auto h-[1.5px] w-0 group-hover:w-10 transition-all duration-300 rounded-full"
@@ -127,7 +127,7 @@ export default function ServicesSection() {
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16"
         >
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
               Our Services
             </p>
             <h2
@@ -142,7 +142,7 @@ export default function ServicesSection() {
           </div>
 
           <p
-            className="text-[16px] leading-[1.75] text-[#566070] hidden md:block"
+            className="text-lg leading-[1.75] text-[#566070] hidden md:block"
             style={{ maxWidth: "44ch" }}
           >
             Six interconnected domains. Each one a discipline in its own right.
@@ -167,7 +167,7 @@ export default function ServicesSection() {
         >
           <a
             href="#contact"
-            className="inline-flex items-center gap-3 px-8 py-4 text-[15px] font-semibold text-white rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
+            className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold text-white rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
             style={{ background: "#0B6B82" }}
           >
             Work with MG<AnimatedX />

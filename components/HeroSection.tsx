@@ -100,7 +100,7 @@ export default function HeroSection() {
           />
           <span
             className="font-mono uppercase
-                       text-[10px] sm:text-[11px]
+                       text-xs sm:text-sm
                        tracking-[0.22em] sm:tracking-[0.3em]"
             style={{ color: "#566070" }}
           >
@@ -160,13 +160,13 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.7 }}
           className="mt-7 sm:mt-9 md:mt-10
-                     text-[15px] sm:text-[16px] md:text-[18px]
+                     text-base sm:text-lg md:text-xl
                      leading-[1.7] sm:leading-[1.75] md:leading-[1.8]"
           style={{ color: "#566070", maxWidth: "52ch" }}
         >
           Africa's premier ecosystem for research, technology, innovation
           and entrepreneurship. We turn rigorous thinking into systems that
-          serve real human needs — at scale.
+          serve real human needs  at scale.
         </motion.p>
 
         {/* CTAs — stack on xs, inline from sm+ */}
@@ -184,7 +184,7 @@ export default function HeroSection() {
             className="group inline-flex items-center justify-center sm:justify-start gap-3
                        w-full sm:w-auto
                        px-6 sm:px-7 py-3.5
-                       text-[14px] sm:text-[15px] font-semibold text-white
+                       text-base font-semibold text-white
                        rounded-md transition-all hover:opacity-95 active:scale-[0.97]"
             style={{
               background: "#0B6B82",
@@ -211,7 +211,7 @@ export default function HeroSection() {
           <a
             href="#campus"
             className="inline-flex items-center justify-center sm:justify-start
-                       text-[14px] sm:text-[15px] font-medium
+                       text-base font-medium
                        hover:underline underline-offset-4 transition-all
                        py-2 sm:py-0"
             style={{ color: "#0C0E12" }}

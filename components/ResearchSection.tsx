@@ -36,7 +36,7 @@ const pillars = [
     n: "04",
     name: "Digital Infrastructure",
     sub: "Cloud · Enterprise · Software",
-    desc: "Cloud environments and custom platforms built for reliability at scale — no vendor lock-in.",
+    desc: "Cloud environments and custom platforms built for reliability at scale  no vendor lock-in.",
   },
   {
     n: "05",
@@ -93,7 +93,7 @@ export default function ResearchSection() {
       >
         {/* Header */}
         <FadeUp>
-          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
             MG<AnimatedX /> Research
           </p>
         </FadeUp>
@@ -126,7 +126,7 @@ export default function ResearchSection() {
 
           <FadeUp delay={0.1}>
             <p
-              className="text-[17px] leading-[1.8] text-[#566070]"
+              className="text-lg leading-[1.8] text-[#566070]"
               style={{ maxWidth: "46ch" }}
             >
               MexyGabriel (MG<AnimatedX />) is a full-spectrum technology
@@ -166,7 +166,7 @@ export default function ResearchSection() {
                 >
                   {s.value}
                 </span>
-                <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[#566070]">
+                <span className="font-mono text-xs uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[#566070]">
                   {s.label}
                 </span>
               </div>
@@ -178,10 +178,10 @@ export default function ResearchSection() {
         <div className="mt-24">
           <FadeUp>
             <div className="flex items-baseline justify-between mb-10">
-              <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#94A3B8]">
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8]">
                 Our 6 Research Pillars
               </p>
-              <span className="font-mono text-[10px] tracking-[0.2em] text-[#C0CDD8]">
+              <span className="font-mono text-xs tracking-[0.2em] text-[#C0CDD8]">
                 001 — 006
               </span>
             </div>
@@ -215,10 +215,10 @@ export default function ResearchSection() {
                     >
                       {p.name}
                     </h3>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#94A3B8]">
+                    <p className="font-mono text-xs uppercase tracking-[0.15em] text-[#94A3B8]">
                       {p.sub}
                     </p>
-                    <p className="text-[13px] sm:text-[14px] leading-[1.7] text-[#566070] mt-1">
+                    <p className="text-sm sm:text-base leading-[1.7] text-[#566070] mt-1">
                       {p.desc}
                     </p>
                   </div>
@@ -242,11 +242,11 @@ export default function ResearchSection() {
             className="font-display font-bold text-white leading-snug"
             style={{ fontSize: "clamp(1.1rem, 2vw, 1.4rem)", letterSpacing: "-0.02em", maxWidth: "52ch" }}
           >
-            "Solving real human problems with technology — Africa-rooted, globally-minded."
+            "Solving real human problems with technology Africa-rooted, globally-minded."
           </p>
           <a
             href="#services"
-            className="shrink-0 px-6 py-3 text-[14px] font-semibold rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
+            className="shrink-0 px-6 py-3 text-base font-semibold rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
             style={{ background: "#FFFFFF", color: "#0B6B82" }}
           >
             Explore Our Services

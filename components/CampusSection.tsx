@@ -67,7 +67,7 @@ export default function CampusSection() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-10 mb-16">
           <div>
             <FadeUp>
-              <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
                 MG<AnimatedX /> Campus — Enugu, Nigeria
               </p>
             </FadeUp>
@@ -89,7 +89,7 @@ export default function CampusSection() {
 
           <FadeUp delay={0.1}>
             <p
-              className="text-[17px] leading-[1.8] text-[#566070]"
+              className="text-lg leading-[1.8] text-[#566070]"
               style={{ maxWidth: "46ch" }}
             >
               The MG<AnimatedX /> Campus is a physical innovation ecosystem currently under
@@ -127,7 +127,7 @@ export default function CampusSection() {
             />
             <div className="absolute bottom-8 left-8">
               <span
-                className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/85 px-3 py-1.5 rounded-sm"
+                className="font-mono text-xs uppercase tracking-[0.2em] text-white/85 px-3 py-1.5 rounded-sm"
                 style={{
                   background: "rgba(11,107,130,0.7)",
                   backdropFilter: "blur(8px)",
@@ -162,13 +162,13 @@ export default function CampusSection() {
                   />
                   <h3
                     className="font-display font-bold text-[#0C0E12]"
-                    style={{ fontSize: "16px", letterSpacing: "-0.01em" }}
+                    style={{ fontSize: "18px", letterSpacing: "-0.01em" }}
                   >
                     {f.label}
                   </h3>
                 </div>
                 <p
-                  className="text-[14px] leading-[1.7] text-[#566070]"
+                  className="text-base leading-[1.7] text-[#566070]"
                   style={{ paddingLeft: "1.125rem" }}
                 >
                   {f.desc}
@@ -182,7 +182,7 @@ export default function CampusSection() {
                             gap-3 sm:gap-4">
               <a
                 href="#contact"
-                className="px-6 py-3 text-[13px] sm:text-[14px] font-semibold text-white
+                className="px-6 py-3 text-sm sm:text-base font-semibold text-white
                            rounded-md text-center
                            transition-all hover:opacity-90 active:scale-[0.97]"
                 style={{ background: "#0B6B82" }}
@@ -191,7 +191,7 @@ export default function CampusSection() {
               </a>
               <a
                 href="#contact"
-                className="px-6 py-3 text-[13px] sm:text-[14px] font-semibold text-[#0B6B82]
+                className="px-6 py-3 text-sm sm:text-base font-semibold text-[#0B6B82]
                            text-center sm:text-left
                            hover:underline underline-offset-4 transition-all"
               >
@@ -223,7 +223,7 @@ export default function CampusSection() {
                 of African technologists will learn, build, and launch the solutions
                 the continent needs."
               </p>
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#94A3B8] mt-3">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#94A3B8] mt-3">
                 MexyGabriel — Founder, MG<AnimatedX />
               </p>
             </div>
