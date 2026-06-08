@@ -52,9 +52,9 @@ export default function HeroSection() {
 
       {/* ── LAYER 3: brand colour glows ── */}
       <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3 }}>
-        <div className="absolute top-[-15%] right-[-8%] w-[700px] h-[700px] rounded-full blur-[140px]"
+        <div className="absolute top-[-15%] right-[-8%] w-175 h-175 rounded-full blur-[140px]"
           style={{ background: "#3B9FE8", opacity: 0.08 }} />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full blur-[120px]"
+        <div className="absolute bottom-[-10%] left-[-5%] w-150 h-150 rounded-full blur-[120px]"
           style={{ background: "#3DBE6E", opacity: 0.06 }} />
       </div>
 
@@ -211,7 +211,7 @@ export default function HeroSection() {
             <motion.div
               animate={{ width: i === index ? 28 : 6, opacity: i === index ? 1 : 0.3 }}
               transition={{ duration: 0.3 }}
-              className="h-[3px] rounded-full bg-white"
+              className="h-0.75 rounded-full bg-white"
             />
           </button>
         ))}

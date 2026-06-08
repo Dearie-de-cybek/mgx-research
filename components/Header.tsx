@@ -829,25 +829,27 @@ export default function Header() {
       </AnimatePresence>
 
       {/* ════════════════════════════════════════════════════════════
-          MOBILE — FLOATING PILL (always visible)
+          MOBILE — FLOATING PILL
       ════════════════════════════════════════════════════════════ */}
       <div className="md:hidden fixed top-4 left-4 right-4 z-50">
-        <div className="glass-nav rounded-2xl flex items-center justify-between px-5 py-3.5">
+        <div className="glass-nav rounded-xl flex items-center justify-between px-5 py-3">
           <a href="/" className="hover:opacity-80 transition-opacity">
-            <MGXLogo size="text-[22px]" mgColor="white" />
+            <MGXLogo size="text-[20px]" mgColor="white" />
           </a>
           <button
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle mobile menu"
-            className="p-1.5"
+            className="flex flex-col gap-[5px] p-1"
           >
-            <HamburgerIcon open={mobileOpen} />
+            {/* Yugen-style offset hamburger */}
+            <span className="block h-px w-5 bg-stone-800" />
+            <span className="block h-px w-3.5 bg-stone-800 ml-auto" />
           </button>
         </div>
       </div>
 
       {/* ════════════════════════════════════════════════════════════
-          MOBILE — FULL SCREEN MENU
+          MOBILE — FULL SCREEN MENU (Yugen-style)
       ════════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {mobileOpen && (
@@ -856,85 +858,128 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.28 }}
             className="md:hidden fixed inset-0 z-40 flex flex-col"
             style={{
-              backdropFilter: "blur(32px) saturate(180%)",
-              WebkitBackdropFilter: "blur(32px) saturate(180%)",
-              background: "oklch(99% 0.004 80 / 0.88)",
+              backdropFilter: "blur(28px) saturate(160%)",
+              WebkitBackdropFilter: "blur(28px) saturate(160%)",
+              background: "rgb(200 194 188 / 0.82)",
             }}
           >
-            {/* Mobile header */}
-            <div className="flex items-center justify-between px-6 pt-5 pb-4">
-              <a href="/" className="hover:opacity-80 transition-opacity">
+            {/* ── Header ── */}
+            <div className="flex items-center justify-between px-6 pt-6 pb-5">
+              <a href="/" className="hover:opacity-80 transition-opacity"
+                onClick={() => setMobileOpen(false)}>
                 <MGXLogo size="text-[22px]" mgColor="dark" />
               </a>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-stone-100/80 text-stone-500 text-xl leading-none"
-                aria-label="Close menu"
+                className="w-9 h-9 flex items-center justify-center text-stone-700 text-2xl leading-none font-light hover:opacity-60 transition-opacity"
+                aria-label="Close"
               >
                 ×
               </button>
             </div>
 
-            <div className="w-full h-px bg-stone-200/60 mb-2" />
+            {/* ── Nav links ── */}
+            <nav className="flex flex-col flex-1 px-6 overflow-y-auto">
+              {/* Home — active with underline */}
+              <motion.a
+                href="/"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04, duration: 0.38, ease }}
+                onClick={() => setMobileOpen(false)}
+                className="py-5 border-b border-stone-400/25 text-stone-900 font-medium tracking-tight leading-none"
+                style={{ fontSize: "clamp(1.8rem, 7vw, 2.4rem)" }}
+              >
+                <span className="underline underline-offset-4 decoration-stone-900 decoration-[1.5px]">Home</span>
+              </motion.a>
 
-            {/* Mobile nav links — large type */}
-            <nav className="flex flex-col flex-1 px-4 pt-4 gap-0.5">
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  initial={{ opacity: 0, y: 18 }}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4, ease }}
+                  transition={{ delay: (i + 1) * 0.05 + 0.04, duration: 0.38, ease }}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 py-4 px-2 border-b border-stone-200/50 text-stone-900 text-[2rem] font-medium tracking-tight leading-none"
+                  className="relative flex items-center py-5 border-b border-stone-400/25 text-stone-900 font-medium tracking-tight leading-none hover:opacity-70 transition-opacity"
+                  style={{ fontSize: "clamp(1.8rem, 7vw, 2.4rem)" }}
                 >
-                  <span className="flex-1">{link.label}</span>
-                  {link.active && <BlinkDot />}
+                  {link.label}
+                  {link.active && (
+                    <span className="absolute right-0 top-1/2 -translate-y-1/2 flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                    </span>
+                  )}
                 </motion.a>
               ))}
 
+              {/* MGX Campus — accent colour like YGN Bloom */}
               <motion.a
                 href="#campus"
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.28, duration: 0.4, ease }}
+                transition={{ delay: 0.36, duration: 0.38, ease }}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 py-4 px-2 border-b border-stone-200/50 text-[2rem] font-medium tracking-tight leading-none"
-                style={{ color: "#8B6F4E" }}
+                className="py-5 font-medium tracking-tight leading-none hover:opacity-70 transition-opacity"
+                style={{
+                  fontSize: "clamp(1.8rem, 7vw, 2.4rem)",
+                  color: "#8B6F4E",
+                }}
               >
                 MGX Campus
               </motion.a>
             </nav>
 
-            {/* Mobile bottom */}
+            {/* ── Bottom section ── */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.4 }}
-              className="px-6 pb-10 pt-6 space-y-4"
+              transition={{ delay: 0.38, duration: 0.38 }}
+              className="px-6 pb-8 pt-5 flex flex-col gap-5"
             >
-              <div className="flex items-center gap-5">
-                {["LinkedIn", "Twitter", "Instagram"].map((s) => (
-                  <a
-                    key={s}
-                    href="#"
-                    className="text-sm text-stone-500 hover:text-stone-800 transition-colors"
-                  >
-                    {s}
-                  </a>
-                ))}
+              {/* Divider */}
+              <div className="w-full h-px bg-stone-400/25" />
+
+              {/* Social + badges row */}
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1.5">
+                  {["LinkedIn", "Instagram"].map((s) => (
+                    <a key={s} href="#"
+                      className="text-[14px] text-stone-700 hover:text-stone-900 transition-colors font-medium">
+                      {s}
+                    </a>
+                  ))}
+                </div>
+
+                {/* Certification badges */}
+                <div className="flex items-center gap-3">
+                  {/* Badge 1 — circular stamp style */}
+                  <div className="w-12 h-12 rounded-full border border-stone-400/40 flex items-center justify-center bg-stone-100/50">
+                    <span className="font-mono text-[9px] uppercase text-stone-600 text-center leading-tight tracking-tight">
+                      ISO<br/>27001
+                    </span>
+                  </div>
+                  {/* Badge 2 */}
+                  <div className="w-12 h-12 rounded-full border border-stone-400/40 flex items-center justify-center bg-stone-100/50">
+                    <span className="font-mono text-[9px] uppercase text-stone-600 text-center leading-tight tracking-tight">
+                      MGX<br/>CERT
+                    </span>
+                  </div>
+                </div>
               </div>
+
+              {/* Divider */}
+              <div className="w-full h-px bg-stone-400/25" />
+
+              {/* CTA */}
               <button
-                onClick={() => {
-                  setMobileOpen(false);
-                  setBookOpen(true);
-                }}
-                className="w-full py-4 rounded-2xl text-stone-900 text-base font-medium flex items-center justify-center gap-2 hover:brightness-95 active:scale-[0.98] transition-all duration-150"
-                style={{ background: "oklch(88% 0.2 120)" }}
+                onClick={() => { setMobileOpen(false); setBookOpen(true); }}
+                className="w-full py-4 rounded-xl text-stone-900 text-[16px] font-semibold flex items-center justify-center gap-2 hover:brightness-95 active:scale-[0.98] transition-all"
+                style={{ background: "#EBFFB3" }}
               >
                 Book a call now →
               </button>

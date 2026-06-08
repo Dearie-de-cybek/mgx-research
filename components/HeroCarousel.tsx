@@ -128,7 +128,7 @@ export default function HeroCarousel({ index, onIndexChange, flash }: Props) {
             <motion.div
               animate={{ width: i === index ? 28 : 6, opacity: i === index ? 1 : 0.35 }}
               transition={{ duration: 0.3 }}
-              className="h-[3px] rounded-full bg-white"
+              className="h-0.75 rounded-full bg-white"
             />
           </button>
         ))}
