@@ -6,6 +6,7 @@ import PillarsSection from "@/components/PillarsSection";
 import CampusSection from "@/components/CampusSection";
 import ProductsSection from "@/components/ProductsSection";
 import FooterSection from "@/components/FooterSection";
+import DesignSwitcher from "@/components/DesignSwitcher";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <CampusSection />
       <ProductsSection />
       <FooterSection />
+      <DesignSwitcher />
     </>
   );
 }

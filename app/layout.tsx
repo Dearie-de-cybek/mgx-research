@@ -1,37 +1,27 @@
 import type { Metadata } from "next";
-import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
-/*
-  FONT SYSTEM
-  ─────────────────────────────────────────────────────
-  Slot          | Target (Fontshare)   | Live fallback (Google)
-  ─────────────────────────────────────────────────────
-  --pp-font     | Cabinet Grotesk      | DM Sans
-  --display-font| Clash Display        | DM Sans (bold)
-  --mono-font   | IBM Plex Mono        | IBM Plex Mono (exact, Google)
-  --logo-font   | Nunito (rounded)     | via Google Fonts
-  ─────────────────────────────────────────────────────
-
-  To activate real fonts:
-  1. Download Cabinet Grotesk + Clash Display from fontshare.com
-  2. Download IBM Plex Mono from fonts.google.com
-  3. Drop .woff2 files into /public/fonts/
-  4. Uncomment @font-face blocks in globals.css
-*/
-
-const dmSans = DM_Sans({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--pp-font",
+  variable: "--sans-font",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
   variable: "--mono-font",
   display: "swap",
+  weight: ["400", "500", "600"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--serif-font",
+  display: "swap",
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -45,7 +35,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover" as const,
-  themeColor: "#FFFFFF",
+  themeColor: "#061f33",
 };
 
 export default function RootLayout({
@@ -56,7 +46,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col overflow-x-clip">{children}</body>
     </html>

@@ -1,81 +1,44 @@
 @import "tailwindcss";
 
-/*
-  FONT DECLARATIONS
-  Files go in /public/fonts/
-  ─────────────────────────────────────────────────────────────────
-  CabinetGrotesk-Variable.woff2    → fontshare.com
-  ClashDisplay-Variable.woff2      → fontshare.com
-  IBMPlexMono-Regular.woff2        → fonts.google.com
-
-  Uncomment when files are in place ↓
-*/
-
-/*
-@font-face {
-  font-family: "CabinetGrotesk";
-  src: url("/fonts/CabinetGrotesk-Variable.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "ClashDisplay";
-  src: url("/fonts/ClashDisplay-Variable.woff2") format("woff2-variations");
-  font-weight: 200 700;
-  font-display: swap;
-}
-*/
-
 /* ── FONT UTILITIES ─────────────────────────────────────────────── */
 
-@utility font-pp {
-  font-family: "CabinetGrotesk", var(--pp-font), ui-sans-serif, system-ui, sans-serif;
-}
-
 @utility font-display {
-  font-family: "CabinetGrotesk", var(--pp-font), ui-sans-serif, system-ui, sans-serif;
+  font-family: "Space Grotesk", var(--sans-font), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "ss02";
 }
 
 @utility font-mono {
-  font-family: "IBMPlexMono", var(--mono-font), ui-monospace, "Cascadia Code", monospace;
+  font-family: "JetBrains Mono", var(--mono-font), ui-monospace, "Cascadia Code", monospace;
+}
+
+@utility font-serif {
+  font-family: "Instrument Serif", var(--serif-font), "Times New Roman", serif;
 }
 
 /* ── MGX BRAND TOKENS ───────────────────────────────────────────── */
 
 @theme {
-  /* Backgrounds */
-  --color-mgx-bg: #FFFFFF;
-  --color-mgx-surface: #F4F7FA;
-  --color-mgx-surface-2: #EBF1F5;
+  /* Navy palette */
+  --color-navy-900: #061f33;
+  --color-navy-800: #0a2c46;
+  --color-navy-700: #0e3d5c;
+  --color-navy-600: #134e6f;
+  --color-teal-500: #1a6680;
+  --color-teal-400: #2c8fa8;
+  --color-sky-400:  #3fa9d9;
+  --color-sky-300:  #6dc3e6;
+  --color-green:       #4ed074;
+  --color-green-bright: #5dd673;
+  --color-ink:    #0c0e12;
+  --color-paper:  #f5f1e8;
+  --color-paper-2: #ece6d6;
 
-  /* Text */
-  --color-mgx-text: #0C0E12;
-  --color-mgx-muted: #566070;
-  --color-mgx-faint: #94A3B8;
-
-  /* Brand — MGX teal + green + blue */
-  --color-mgx-teal: #0B6B82;
-  --color-mgx-teal-light: #0E90A8;
-  --color-mgx-teal-dark: #074F62;
-  --color-mgx-green: #2CBF68;
-  --color-mgx-blue: #3B9FE8;
-
-  /* Structure */
-  --color-mgx-border: #E2E8F0;
-  --color-mgx-divider: #EDF2F7;
-
-  /* Hero dark */
-  --color-mgx-hero: #06090F;
-
-  --spacing-section: clamp(5rem, 8vw, 9rem);
+  --spacing-section: clamp(5rem, 10vw, 9rem);
 }
 
 /* ── BASE ───────────────────────────────────────────────────────── */
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -83,87 +46,91 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  /* fluid base font size — 15px at 320w, 16px at 1024w+ */
   font-size: clamp(15px, 14px + 0.2vw, 16px);
 }
 
 body {
-  background-color: #FFFFFF;
-  color: #0C0E12;
-  font-family: "CabinetGrotesk", var(--pp-font), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background-color: #061f33;
+  color: #ffffff;
+  font-family: "Space Grotesk", var(--sans-font), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "ss02";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
-  /* Notch / safe area on iOS */
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
 
-img, svg, video {
-  max-width: 100%;
-}
+img, svg, video { max-width: 100%; }
+a { color: inherit; text-decoration: none; }
 
 /* ── SELECTION ──────────────────────────────────────────────────── */
 
 ::selection {
-  background-color: #0B6B82;
-  color: #FFFFFF;
+  background-color: #4ed074;
+  color: #061f33;
 }
 
-/* ── GLASS (hero nav only) ──────────────────────────────────────── */
+/* ── GLASS NAV ──────────────────────────────────────────────────── */
 
-@utility glass-dark {
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  background-color: rgba(12, 14, 18, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+@utility glass-nav {
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
-/* ── ANIMATED TEXT GRADIENT ─────────────────────────────────────── */
+/* ── HERO GRID PATTERN ──────────────────────────────────────────── */
+
+@utility bg-hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+/* ── ANIMATIONS ─────────────────────────────────────────────────── */
 
 @keyframes shifting-gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
 @utility animate-shifting-gradient {
   background-size: 200% auto;
   animation: shifting-gradient 6s ease infinite;
 }
 
-/* ── TYPEWRITER CURSOR BLINK ────────────────────────────────────── */
-@keyframes cursor-blink {
-  50% { border-color: transparent; }
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(78,208,116,0.22); }
+  50%       { box-shadow: 0 0 0 10px rgba(78,208,116,0); }
+}
+@utility animate-pulse-dot {
+  animation: pulse-dot 2.4s ease-in-out infinite;
 }
 
-@utility animate-blink {
-  animation: cursor-blink 0.8s step-end infinite;
+@keyframes slide-bar {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+@utility animate-slide-bar {
+  animation: slide-bar 2.4s ease-in-out infinite;
 }
 
-/* ── INFINITE MARQUEE ───────────────────────────────────────────── */
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+@keyframes tick {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@utility animate-tick {
+  animation: tick 38s linear infinite;
 }
 
-@utility animate-marquee {
-  animation: marquee 30s linear infinite;
+/* ── REDUCED MOTION ─────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-dot,
+  .animate-slide-bar,
+  .animate-tick,
+  .animate-shifting-gradient {
+    animation: none;
+  }
 }
-
-/* ── TECH GRID & DOT MESHES ─────────────────────────────────────── */
-@utility bg-grid-mesh {
-  background-size: 50px 50px;
-  background-image: 
-    linear-gradient(to right, rgba(11, 107, 130, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(11, 107, 130, 0.04) 1px, transparent 1px);
-}
-
-@utility bg-dot-mesh {
-  background-size: 24px 24px;
-  background-image: radial-gradient(rgba(11, 107, 130, 0.06) 1px, transparent 1px);
-}
-
-
-
-

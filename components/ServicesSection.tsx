@@ -1,242 +1,188 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 
-const services = [
-  {
-    n: "01",
-    title: "Intelligence Systems",
-    tags: ["AI & ML", "Analytics"],
-    desc: "Custom AI models and analytics pipelines that adapt to real operational data — not vendor assumptions.",
-    img: "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=600",
-    color: "#0B6B82",
-    gradient: "from-[#0B6B82]/18 via-[#0B6B82]/5 to-[#2CBF68]/8",
-    border: "border-[#0B6B82]/35",
-    shadow: "shadow-[0_20px_50px_rgba(11,107,130,0.06)]",
-  },
-  {
-    n: "02",
-    title: "Security & Resilience",
-    tags: ["Zero-Trust", "Threat Intel"],
-    desc: "Zero-trust architecture, 24/7 monitoring, and incident response for high-risk environments.",
-    img: "https://images.pexels.com/photos/323311/pexels-photo-323311.jpeg?auto=compress&cs=tinysrgb&w=600",
-    color: "#2CBF68",
-    gradient: "from-[#2CBF68]/18 via-[#2CBF68]/5 to-[#3B9FE8]/8",
-    border: "border-[#2CBF68]/35",
-    shadow: "shadow-[0_20px_50px_rgba(44,191,104,0.06)]",
-  },
-  {
-    n: "03",
-    title: "Automation & Robotics",
-    tags: ["RPA", "Control Logic"],
-    desc: "Eliminate repeatable work. From front-office workflows to factory floor robotics.",
-    img: "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=600",
-    color: "#3B9FE8",
-    gradient: "from-[#3B9FE8]/18 via-[#3B9FE8]/5 to-[#0B6B82]/8",
-    border: "border-[#3B9FE8]/35",
-    shadow: "shadow-[0_20px_50px_rgba(59,159,232,0.06)]",
-  },
-  {
-    n: "04",
-    title: "Digital Infrastructure",
-    tags: ["Cloud", "APIs & Apps"],
-    desc: "Cloud environments and custom enterprise platforms built for reliability at scale — no vendor lock-in.",
-    img: "https://images.pexels.com/photos/442150/pexels-photo-442150.jpeg?auto=compress&cs=tinysrgb&w=600",
-    color: "#0E90A8",
-    gradient: "from-[#0E90A8]/18 via-[#0E90A8]/5 to-[#2CBF68]/8",
-    border: "border-[#0E90A8]/35",
-    shadow: "shadow-[0_20px_50px_rgba(14,144,168,0.06)]",
-  },
-  {
-    n: "05",
-    title: "Governance Systems",
-    tags: ["E-Gov", "Smart Cities"],
-    desc: "Citizen portals and smart infrastructure designed first for the people who use them daily.",
-    img: "https://images.pexels.com/photos/3183158/pexels-photo-3183158.jpeg?auto=compress&cs=tinysrgb&w=600",
-    color: "#0B6B82",
-    gradient: "from-[#0B6B82]/18 via-[#0B6B82]/5 to-[#3B9FE8]/8",
-    border: "border-[#0B6B82]/35",
-    shadow: "shadow-[0_20px_50px_rgba(11,107,130,0.06)]",
-  },
-  {
-    n: "06",
-    title: "Human Innovation",
-    tags: ["Health & EdTech", "UX Design"],
-    desc: "Health, education, and service platforms designed for real constraints and real communities.",
-    img: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=600",
-    color: "#2CBF68",
-    gradient: "from-[#2CBF68]/18 via-[#2CBF68]/5 to-[#0E90A8]/8",
-    border: "border-[#2CBF68]/35",
-    shadow: "shadow-[0_20px_50px_rgba(44,191,104,0.06)]",
-  },
+const ease = [0.23, 1, 0.32, 1] as const;
+
+const FOCUSES = [
+  { n: "0.01", name: "AI" },
+  { n: "0.02", name: "Robotics" },
+  { n: "0.03", name: "Automation" },
+  { n: "0.04", name: "Cybersecurity" },
+  { n: "0.05", name: "Smart Systems" },
+  { n: "0.06", name: "Digital Transformation" },
+  { n: "0.07", name: "Research" },
+  { n: "0.08", name: "Technology" },
+  { n: "0.09", name: "Innovation" },
+  { n: "0.10", name: "Entrepreneurship" },
 ];
 
-export default function ServicesSection() {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-  });
+function FadeUp({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease, delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
-  // Scroll mapping for desktop (horizontal slide of cards)
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-70%"]);
-  const imgX = useTransform(scrollYProgress, [0, 1], [-35, 35]);
+function FocusCell({ num, name }: { num: string; name: string }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <section
-      ref={targetRef}
-      id="services"
-      className="relative w-full bg-[#F8FAFC] md:h-[300vh]"
-      style={{ borderTop: "1px solid #E2E8F0" }}
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        borderRight: "1px solid rgba(12,14,18,0.12)",
+        borderBottom: "1px solid rgba(12,14,18,0.12)",
+        padding: "28px 24px",
+        minHeight: "180px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        background: hovered ? "#0e3d5c" : "#f5f1e8",
+        color: hovered ? "#fff" : "#0c0e12",
+        transition: "background 0.3s, color 0.3s",
+        position: "relative",
+        cursor: "default",
+      }}
     >
-      {/* Viewport container pinned during vertical scroll */}
-      <div className="md:sticky md:top-0 md:h-screen flex flex-col justify-center overflow-hidden py-16 sm:py-20 md:py-0">
-        <div className="max-w-[1280px] mx-auto w-full px-5 sm:px-8 md:px-12 lg:px-20 mb-8 md:mb-12 shrink-0">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-4">
-            Capabilities
-          </p>
-          <h2 className="font-display font-black text-[#0C0E12] uppercase tracking-tighter leading-none select-none text-[clamp(3rem,8vw,6.5rem)]">
-            Services
-          </h2>
-        </div>
+      <span
+        className="font-mono text-[11px] tracking-[0.2em]"
+        style={{
+          color: hovered ? "#5dd673" : "rgba(12,14,18,0.58)",
+          transition: "color 0.3s",
+        }}
+      >
+        {num}
+      </span>
+      <span
+        style={{
+          fontSize: "clamp(18px, 2vw, 26px)",
+          fontWeight: 600,
+          lineHeight: 1.05,
+          letterSpacing: "-0.02em",
+        }}
+      >
+        {name}
+      </span>
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        style={{
+          position: "absolute",
+          top: "24px",
+          right: "24px",
+          opacity: hovered ? 1 : 0,
+          transform: hovered ? "translate(2px,-2px)" : "translate(0,0)",
+          transition: "opacity 0.3s, transform 0.3s",
+          color: "#5dd673",
+        }}
+      >
+        <path
+          d="M3 11L11 3M11 3H4M11 3v7"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
 
-        {/* Desktop horizontal track */}
-        <div className="hidden md:block w-full">
-          <motion.div
-            style={{ x }}
-            className="flex gap-8 pl-[35vw] pr-12 lg:pr-20"
-          >
-            {services.map((s) => (
-              <div
-                key={s.n}
-                className={`group w-[440px] lg:w-[480px] shrink-0 bg-gradient-to-br ${s.gradient} backdrop-blur-md border ${s.border} rounded-3xl flex flex-col h-[460px] lg:h-[500px] ${s.shadow} overflow-hidden transition-all duration-500 hover:-translate-y-2 cursor-pointer`}
-              >
-                {/* Top card layout: full-bleed image container */}
-                <div className="relative w-full h-[200px] lg:h-[230px] overflow-hidden shrink-0">
-                  <motion.img
-                    src={s.img}
-                    alt={s.title}
-                    style={{ x: imgX }}
-                    className="absolute inset-y-0 left-[-35px] w-[calc(100%+70px)] h-full object-cover max-w-none transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent z-10 pointer-events-none" />
-                  
-                  {/* Floating Tags and Arrow on image */}
-                  <div className="absolute top-5 left-5 flex gap-2 z-20">
-                    {s.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="font-mono text-[9px] uppercase tracking-[0.12em] px-3 py-1 bg-white/95 backdrop-blur-sm rounded-full border border-white/85 shadow-sm"
-                        style={{ color: s.color }}
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div
-                    className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 z-20"
-                    style={{ color: s.color }}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="7" y1="17" x2="17" y2="7"></line>
-                      <polyline points="7 7 17 7 17 17"></polyline>
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Divider border */}
-                <div className={`w-full h-[1px] border-b ${s.border} opacity-80`} />
-
-                {/* Bottom card content */}
-                <div className="p-7 lg:p-8 relative flex-1 flex flex-col justify-start overflow-hidden">
-                  {/* Huge background watermark number */}
-                  <span
-                    className="absolute bottom-2 right-6 font-display font-black leading-none select-none pointer-events-none text-[8.5rem] lg:text-[10rem] tracking-tighter"
-                    style={{ color: s.color, opacity: 0.09 }}
-                  >
-                    {s.n}
-                  </span>
-
-                  <div className="relative z-10 flex flex-col gap-2">
-                    <h3 className="font-display font-bold text-[#0C0E12] text-xl lg:text-2xl tracking-tight">
-                      {s.title}
-                    </h3>
-                    <p className="text-sm lg:text-base leading-[1.6] text-[#566070] max-w-[92%]">
-                      {s.desc}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Mobile touch scroll track (fallback) */}
-        <div className="md:hidden w-full overflow-x-auto scrollbar-none px-5 sm:px-8 flex gap-6 snap-x snap-mandatory pb-6">
-          {services.map((s) => (
-            <div
-              key={s.n}
-              className={`group w-[290px] sm:w-[320px] shrink-0 snap-start bg-gradient-to-br ${s.gradient} border ${s.border} rounded-3xl flex flex-col h-[380px] ${s.shadow} overflow-hidden`}
-            >
-              {/* Full-bleed image top */}
-              <div className="relative w-full h-[160px] overflow-hidden shrink-0">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={s.img}
-                  alt={s.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 pointer-events-none" />
-                
-                {/* Overlaid tags & arrow */}
-                <div className="absolute top-4 left-4 flex gap-1.5 z-20">
-                  {s.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="font-mono text-[8.5px] uppercase tracking-[0.1em] px-2.5 py-1 bg-white/95 backdrop-blur-sm rounded-full border border-white/85 shadow-sm"
-                      style={{ color: s.color }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                <div
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm border border-white/85 flex items-center justify-center shadow-md z-20"
-                  style={{ color: s.color }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
-                </div>
-              </div>
-
-              {/* Divider border */}
-              <div className={`w-full h-[1px] border-b ${s.border} opacity-80`} />
-
-              {/* Mobile text content */}
-              <div className="p-5 relative flex-1 flex flex-col justify-start overflow-hidden">
+export default function ServicesSection() {
+  return (
+    <section
+      id="focus"
+      style={{
+        background: "#f5f1e8",
+        color: "#0c0e12",
+        padding: "clamp(80px, 10vw, 140px) 0",
+        borderTop: "1px solid rgba(0,0,0,0.04)",
+      }}
+    >
+      <div className="max-w-[1320px] mx-auto px-5 sm:px-8 lg:px-10">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8 mb-16">
+          <div>
+            <FadeUp>
+              <div className="flex items-center gap-2.5 mb-5">
+                <span className="w-7 h-[1px]" style={{ background: "#1a6680" }} />
                 <span
-                  className="absolute bottom-2 right-4 font-display font-black leading-none select-none pointer-events-none text-[6.5rem] tracking-tighter"
-                  style={{ color: s.color, opacity: 0.09 }}
+                  className="font-mono text-[11px] uppercase tracking-[0.24em]"
+                  style={{ color: "#1a6680" }}
                 >
-                  {s.n}
+                  Our Focus
                 </span>
-
-                <div className="relative z-10 flex flex-col gap-1.5">
-                  <h3 className="font-display font-bold text-[#0C0E12] text-lg tracking-tight">
-                    {s.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm leading-[1.5] text-[#566070] max-w-[90%]">
-                    {s.desc}
-                  </p>
-                </div>
               </div>
+              <h2
+                className="font-display"
+                style={{
+                  fontWeight: 500,
+                  fontSize: "clamp(40px, 5.5vw, 84px)",
+                  lineHeight: 0.95,
+                  letterSpacing: "-0.04em",
+                  color: "#0c0e12",
+                  maxWidth: "14ch",
+                }}
+              >
+                Ten domains.{" "}
+                <span
+                  className="font-serif italic"
+                  style={{ color: "#1a6680", fontWeight: 400 }}
+                >
+                  One
+                </span>{" "}
+                ecosystem.
+              </h2>
+            </FadeUp>
+          </div>
+
+          <FadeUp delay={0.1}>
+            <div
+              className="font-mono text-xs uppercase tracking-[0.22em]"
+              style={{ color: "rgba(12,14,18,0.58)" }}
+            >
+              Index{" "}
+              <span style={{ color: "#1a6680", fontWeight: 500 }}>0.01 to 0.10</span>
             </div>
-          ))}
+          </FadeUp>
         </div>
+
+        {/* Focus grid — 5 cols desktop, 3 tablet, 2 mobile */}
+        <FadeUp delay={0.15}>
+          <div
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+            style={{
+              borderTop: "1px solid rgba(12,14,18,0.12)",
+              borderLeft: "1px solid rgba(12,14,18,0.12)",
+            }}
+          >
+            {FOCUSES.map((f) => (
+              <FocusCell key={f.n} num={f.n} name={f.name} />
+            ))}
+          </div>
+        </FadeUp>
       </div>
     </section>
   );

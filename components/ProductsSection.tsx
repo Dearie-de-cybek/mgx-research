@@ -1,11 +1,66 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import AnimatedX from "./AnimatedX";
 
 const ease = [0.23, 1, 0.32, 1] as const;
+
+function FadeUp({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease, delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+const GALLERY: { src: string; cap: string; style: React.CSSProperties }[] = [
+  {
+    src: "https://images.pexels.com/photos/8728285/pexels-photo-8728285.jpeg?auto=compress&cs=tinysrgb&w=900",
+    cap: "Robotics · Lab 01",
+    style: { gridColumn: "1", gridRow: "1 / 3" },
+  },
+  {
+    src: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=900",
+    cap: "AI · Research",
+    style: { gridColumn: "2", gridRow: "1" },
+  },
+  {
+    src: "https://images.pexels.com/photos/8728382/pexels-photo-8728382.jpeg?auto=compress&cs=tinysrgb&w=900",
+    cap: "Field · Enugu",
+    style: { gridColumn: "3", gridRow: "1" },
+  },
+  {
+    src: "https://images.pexels.com/photos/3913025/pexels-photo-3913025.jpeg?auto=compress&cs=tinysrgb&w=900",
+    cap: "Systems · Lagos",
+    style: { gridColumn: "2 / 4", gridRow: "2" },
+  },
+  {
+    src: "https://images.pexels.com/photos/442150/pexels-photo-442150.jpeg?auto=compress&cs=tinysrgb&w=900",
+    cap: "Infrastructure",
+    style: { gridColumn: "1 / 3", gridRow: "3" },
+  },
+  {
+    src: "https://images.pexels.com/photos/3183158/pexels-photo-3183158.jpeg?auto=compress&cs=tinysrgb&w=900",
+    cap: "Governance · Abuja",
+    style: { gridColumn: "3", gridRow: "3" },
+  },
+];
 
 const products = [
   {
@@ -14,7 +69,7 @@ const products = [
     name: "Cortex",
     tag: "Intelligence",
     tagline: "The brain behind your operation.",
-    desc: "Cortex ingests your data, models patterns, and surfaces intelligence that drives real-time decisions. From demand forecasting to anomaly detection — without replacing the humans in the loop.",
+    desc: "Cortex ingests your data, models patterns, and surfaces intelligence that drives real-time decisions. From demand forecasting to anomaly detection, without replacing the humans in the loop.",
     features: [
       "Real-time analytics dashboards",
       "Custom ML model training & deployment",
@@ -46,7 +101,7 @@ const products = [
     name: "Flow",
     tag: "Automation",
     tagline: "Automate the repeatable.",
-    desc: "Visual workflow builder, RPA bots, and process orchestration in one tool. Deploy in days, not months. Connects to your existing stack — no rip-and-replace.",
+    desc: "Visual workflow builder, RPA bots, and process orchestration in one tool. Deploy in days, not months. Connects to your existing stack, no rip-and-replace.",
     features: [
       "Visual drag-and-drop builder",
       "RPA bots for desktop & web",
@@ -62,7 +117,7 @@ const products = [
     name: "Nexus",
     tag: "Governance",
     tagline: "Public services that work.",
-    desc: "E-governance platform for African institutions — multilingual, offline-capable, low-bandwidth optimised. From permits to citizen portals, fast and transparent.",
+    desc: "E-governance platform for African institutions. Multilingual, offline-capable, low-bandwidth optimised. From permits to citizen portals, fast and transparent.",
     features: [
       "Digital ID & citizen management",
       "Permit, licence & registry workflows",
@@ -78,7 +133,7 @@ const products = [
     name: "Pulse",
     tag: "HealthTech",
     tagline: "Healthcare for the next billion.",
-    desc: "Patients, providers and health systems on one interoperable platform. EMR/EHR, telemedicine, supply chain, analytics — designed for African realities.",
+    desc: "Patients, providers and health systems on one interoperable platform. EMR/EHR, telemedicine, supply chain, analytics, designed for African realities.",
     features: [
       "Electronic medical records (EMR)",
       "Telemedicine & remote consultation",
@@ -91,243 +146,389 @@ const products = [
 ];
 
 const statusColor: Record<string, string> = {
-  Live: "#2CBF68",
-  Beta: "#0B6B82",
-  "In Development": "#94A3B8",
+  Live: "#5dd673",
+  Beta: "#3fa9d9",
+  "In Development": "rgba(255,255,255,0.38)",
 };
 
 export default function ProductsSection() {
   const [active, setActive] = useState(0);
   const p = products[active];
-  const headerRef = useRef<HTMLDivElement>(null);
-  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section
-      id="products"
-      className="w-full bg-white"
-      style={{ borderTop: "1px solid #E2E8F0" }}
-    >
-      <div
-        className="max-w-[1280px] mx-auto
-                   px-5 sm:px-8 md:px-12 lg:px-20
-                   pt-20 sm:pt-24 md:pt-28 lg:pt-32
-                   pb-20 sm:pb-24 md:pb-28 lg:pb-32"
+    <>
+      {/* ── Field Gallery ─────────────────────────────────────── */}
+      <section
+        style={{
+          background: "#0a2c46",
+          padding: "clamp(80px, 10vw, 140px) 0",
+          borderTop: "1px solid rgba(255,255,255,0.10)",
+        }}
       >
-        {/* Header */}
-        <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-14"
-        >
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#94A3B8] mb-5">
-              Our Platforms
-            </p>
-            <h2
-              className="font-display font-black text-[#0C0E12] leading-[1.0]"
+        <div className="max-w-[1320px] mx-auto px-5 sm:px-8 lg:px-10">
+          <FadeUp>
+            <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center gap-2.5">
+                <span className="w-7 h-[1px]" style={{ background: "#5dd673" }} />
+                <span
+                  className="font-mono text-[11px] uppercase tracking-[0.24em]"
+                  style={{ color: "#5dd673" }}
+                >
+                  In the Field
+                </span>
+              </div>
+              <span
+                className="font-mono text-[11px] uppercase tracking-[0.2em] hidden sm:block"
+                style={{ color: "rgba(255,255,255,0.28)" }}
+              >
+                MGX · Active Engagements
+              </span>
+            </div>
+          </FadeUp>
+
+          <FadeUp delay={0.1}>
+            {/* Desktop masonry grid */}
+            <div
+              className="hidden md:grid gap-[5px]"
               style={{
-                fontSize: "clamp(2.4rem, 4.5vw, 4.5rem)",
-                letterSpacing: "-0.035em",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateRows: "repeat(3, 200px)",
+              }}
+            >
+              {GALLERY.map((g, i) => (
+                <motion.div
+                  key={i}
+                  className="relative overflow-hidden group"
+                  style={{
+                    ...g.style,
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.8, ease, delay: i * 0.06 }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={g.src}
+                    alt={g.cap}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                    style={{ filter: "saturate(0.55) contrast(1.06)" }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, transparent 45%, rgba(6,31,51,0.85) 100%)",
+                    }}
+                  />
+                  <span
+                    className="absolute left-3.5 bottom-3.5 font-mono text-[10px] uppercase tracking-[0.22em]"
+                    style={{ color: "rgba(255,255,255,0.65)" }}
+                  >
+                    {g.cap}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Mobile: simple 2-col grid */}
+            <div className="md:hidden grid grid-cols-2 gap-[5px]">
+              {GALLERY.slice(0, 4).map((g, i) => (
+                <div
+                  key={i}
+                  className="relative overflow-hidden"
+                  style={{ height: "160px", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={g.src}
+                    alt={g.cap}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ filter: "saturate(0.55) contrast(1.06)" }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(180deg, transparent 50%, rgba(6,31,51,0.8) 100%)" }}
+                  />
+                  <span
+                    className="absolute left-2.5 bottom-2.5 font-mono text-[9px] uppercase tracking-[0.2em]"
+                    style={{ color: "rgba(255,255,255,0.65)" }}
+                  >
+                    {g.cap}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ── Products ──────────────────────────────────────────── */}
+      <section
+        id="products"
+        style={{
+          background: "#061f33",
+          padding: "clamp(80px, 10vw, 140px) 0",
+          borderTop: "1px solid rgba(255,255,255,0.10)",
+        }}
+      >
+        <div className="max-w-[1320px] mx-auto px-5 sm:px-8 lg:px-10">
+          {/* Header */}
+          <FadeUp className="mb-14">
+            <div className="flex items-center gap-2.5 mb-5">
+              <span className="w-7 h-[1px]" style={{ background: "#5dd673" }} />
+              <span
+                className="font-mono text-[11px] uppercase tracking-[0.24em]"
+                style={{ color: "#5dd673" }}
+              >
+                Our Platforms
+              </span>
+            </div>
+            <h2
+              className="font-display"
+              style={{
+                fontWeight: 500,
+                fontSize: "clamp(40px, 5.5vw, 84px)",
+                lineHeight: 0.95,
+                letterSpacing: "-0.04em",
+                color: "#fff",
                 maxWidth: "16ch",
               }}
             >
-              Built by MG<AnimatedX />.
-              <br />
-              <span style={{ color: "#94A3B8" }}>Deployed everywhere.</span>
+              Built to{" "}
+              <span
+                className="font-serif italic"
+                style={{ color: "#5dd673", fontWeight: 400 }}
+              >
+                deploy
+              </span>
+              .
             </h2>
-          </div>
-          <p
-            className="text-lg leading-[1.75] text-[#566070] hidden md:block"
-            style={{ maxWidth: "36ch" }}
-          >
-            Five platforms. Every research pillar covered. One trusted partner.
-          </p>
-        </motion.div>
+          </FadeUp>
 
-        {/* Tab strip — horizontal scroll on mobile */}
-        <div
-          className="flex overflow-x-auto md:overflow-visible md:flex-wrap gap-0 mb-10 sm:mb-12
-                     -mx-5 px-5 sm:mx-0 sm:px-0
-                     [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          style={{ borderBottom: "1px solid #E2E8F0" }}
-        >
-          {products.map((prod, i) => {
-            const isActive = i === active;
-            return (
-              <button
-                key={prod.id}
-                onClick={() => setActive(i)}
-                className="relative flex items-baseline gap-2 sm:gap-3
-                           px-4 sm:px-5 md:px-7 py-4 sm:py-5
-                           shrink-0 transition-colors duration-200"
-                style={{ outline: "none" }}
-              >
-                <span
-                  className="font-mono text-xs tracking-[0.15em] transition-colors duration-200"
-                  style={{ color: isActive ? "#0B6B82" : "#C0CDD8" }}
-                >
-                  {prod.n}
-                </span>
-                <span
-                  className="font-display font-bold transition-colors duration-200"
-                  style={{
-                    fontSize: "clamp(1rem, 1.4vw, 1.15rem)",
-                    color: isActive ? "#0C0E12" : "#94A3B8",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  {prod.name}
-                </span>
-                {isActive && (
-                  <motion.div
-                    layoutId="tab-underline"
-                    className="absolute bottom-[-1px] left-0 right-0 h-[2px]"
-                    style={{ background: "#0B6B82" }}
-                    transition={{ duration: 0.4, ease }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Detail panel — image left, content right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0" style={{ border: "1px solid #E2E8F0", borderRadius: "4px", overflow: "hidden" }}>
-          {/* Image */}
+          {/* Tab strip */}
           <div
-            className="relative lg:col-span-7 overflow-hidden bg-[#F4F7FA]
-                       min-h-[300px] sm:min-h-[380px] md:min-h-[460px] lg:min-h-[520px]"
+            className="flex overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-5 px-5 sm:mx-0 sm:px-0 mb-10"
+            style={{ borderBottom: "1px solid rgba(255,255,255,0.10)" }}
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={p.id}
-                className="absolute inset-0"
-                initial={{ opacity: 0, scale: 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.6, ease }}
-              >
-                <Image
-                  src={p.img}
-                  alt={p.name}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-cover"
-                  priority
-                />
-                {/* Soft duotone wash */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(11,107,130,0.18) 0%, transparent 55%)",
-                    mixBlendMode: "multiply",
-                  }}
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Status badge */}
-            <div className="absolute top-5 left-5 z-10">
-              <span
-                className="font-mono text-xs uppercase tracking-[0.2em] text-white px-3 py-1.5 rounded-sm"
-                style={{
-                  background: statusColor[p.status],
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-                }}
-              >
-                ● {p.status}
-              </span>
-            </div>
-
-            {/* Floating number — luxury watch detail */}
-            <div className="absolute bottom-5 right-5 z-10">
-              <span
-                className="font-display font-black text-white/15"
-                style={{ fontSize: "clamp(3rem, 7vw, 6rem)", letterSpacing: "-0.06em", lineHeight: 1 }}
-              >
-                {p.n}
-              </span>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div
-            className="lg:col-span-5 flex flex-col
-                       p-6 sm:p-8 md:p-10 lg:p-12
-                       gap-6 sm:gap-7 bg-white"
-            style={{ borderLeft: "1px solid #E2E8F0" }}
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={p.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.45, ease }}
-                className="flex flex-col gap-6"
-              >
-                <div>
-                  <p className="font-mono text-xs uppercase tracking-[0.22em] text-[#94A3B8] mb-3">
-                    MG<AnimatedX /> {p.name} · {p.tag}
-                  </p>
-                  <h3
-                    className="font-display font-black text-[#0C0E12] leading-[1.0]"
-                    style={{ fontSize: "clamp(1.8rem, 2.8vw, 2.6rem)", letterSpacing: "-0.035em" }}
+            {products.map((prod, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={prod.id}
+                  onClick={() => setActive(i)}
+                  className="relative flex items-baseline gap-2.5 px-5 py-4 shrink-0 transition-all duration-200"
+                  style={{ outline: "none" }}
+                >
+                  <span
+                    className="font-mono text-xs tracking-[0.15em]"
+                    style={{
+                      color: isActive ? "#5dd673" : "rgba(255,255,255,0.28)",
+                      transition: "color 0.2s",
+                    }}
                   >
-                    {p.tagline}
-                  </h3>
-                </div>
-
-                <p className="text-base leading-[1.75] text-[#566070]">{p.desc}</p>
-
-                {/* Feature list */}
-                <div className="flex flex-col" style={{ borderTop: "1px solid #EDF2F7" }}>
-                  {p.features.map((f, i) => (
+                    {prod.n}
+                  </span>
+                  <span
+                    className="font-display font-semibold"
+                    style={{
+                      fontSize: "clamp(0.9rem, 1.3vw, 1.1rem)",
+                      color: isActive ? "#fff" : "rgba(255,255,255,0.42)",
+                      letterSpacing: "-0.01em",
+                      transition: "color 0.2s",
+                    }}
+                  >
+                    {prod.name}
+                  </span>
+                  {isActive && (
                     <motion.div
-                      key={f}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: i * 0.05, ease }}
-                      className="flex items-center gap-4 py-3.5"
-                      style={{ borderBottom: "1px solid #EDF2F7" }}
-                    >
-                      <span
-                        className="font-mono text-xs text-[#C0CDD8] w-5 shrink-0"
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="text-base text-[#0C0E12]">{f}</span>
-                    </motion.div>
-                  ))}
-                </div>
+                      layoutId="tab-underline"
+                      className="absolute bottom-[-1px] left-0 right-0 h-[2px]"
+                      style={{ background: "#5dd673" }}
+                      transition={{ duration: 0.4, ease }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-                <div className="flex items-center gap-3 pt-2">
-                  <a
-                    href="#contact"
-                    className="inline-flex items-center gap-2 px-5 py-3 text-sm lg:text-base font-semibold text-white rounded-md transition-all hover:opacity-90 active:scale-[0.97]"
-                    style={{ background: "#0B6B82" }}
+          {/* Detail panel */}
+          <div
+            className="grid grid-cols-1 lg:grid-cols-12"
+            style={{
+              border: "1px solid rgba(255,255,255,0.10)",
+              overflow: "hidden",
+            }}
+          >
+            {/* Image */}
+            <div
+              className="relative lg:col-span-7 min-h-[280px] sm:min-h-[360px] lg:min-h-[500px] overflow-hidden"
+              style={{ background: "#0a2c46" }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={p.id}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.6, ease }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.img}
+                    alt={p.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ filter: "saturate(0.6) contrast(1.08)" }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(6,31,51,0.55) 0%, rgba(10,44,70,0.25) 100%)",
+                    }}
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Status badge */}
+              <div className="absolute top-5 left-5 z-10">
+                <span
+                  className="font-mono text-[10px] uppercase tracking-[0.22em] px-3 py-1.5"
+                  style={{
+                    color: statusColor[p.status],
+                    border: `1px solid ${statusColor[p.status]}`,
+                    background: "rgba(6,31,51,0.65)",
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  ● {p.status}
+                </span>
+              </div>
+
+              {/* Ghost number */}
+              <div className="absolute bottom-4 right-5 z-10 select-none pointer-events-none">
+                <span
+                  className="font-display font-bold"
+                  style={{
+                    fontSize: "clamp(3rem, 7vw, 6rem)",
+                    letterSpacing: "-0.06em",
+                    color: "rgba(255,255,255,0.07)",
+                    lineHeight: 1,
+                  }}
+                >
+                  {p.n}
+                </span>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div
+              className="lg:col-span-5 flex flex-col p-7 sm:p-9 lg:p-12 gap-7"
+              style={{
+                background: "#0a2c46",
+                borderLeft: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.45, ease }}
+                  className="flex flex-col gap-6"
+                >
+                  <div>
+                    <p
+                      className="font-mono text-[11px] uppercase tracking-[0.22em] mb-3"
+                      style={{ color: "#5dd673" }}
+                    >
+                      MGX {p.name} · {p.tag}
+                    </p>
+                    <h3
+                      className="font-display"
+                      style={{
+                        fontWeight: 500,
+                        fontSize: "clamp(1.5rem, 2.4vw, 2.3rem)",
+                        letterSpacing: "-0.03em",
+                        lineHeight: 1.05,
+                        color: "#fff",
+                      }}
+                    >
+                      {p.tagline}
+                    </h3>
+                  </div>
+
+                  <p
+                    className="text-sm sm:text-base leading-[1.72]"
+                    style={{ color: "rgba(255,255,255,0.68)" }}
                   >
-                    {p.status === "Live" ? "Request Access" : "Join Waitlist"}
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6h7M6 2.5L9 6 6 9.5" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </a>
-                  <a
-                    href="#contact"
-                    className="px-5 py-3 text-sm lg:text-base font-semibold text-[#0B6B82] hover:underline underline-offset-4 transition-all"
+                    {p.desc}
+                  </p>
+
+                  <div
+                    className="flex flex-col"
+                    style={{ borderTop: "1px solid rgba(255,255,255,0.09)" }}
                   >
-                    Talk to us →
-                  </a>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+                    {p.features.map((f, i) => (
+                      <motion.div
+                        key={f}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: i * 0.05, ease }}
+                        className="flex items-center gap-4 py-3"
+                        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+                      >
+                        <span
+                          className="font-mono text-[10px] w-5 shrink-0"
+                          style={{ color: "#5dd673" }}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span
+                          className="text-sm"
+                          style={{ color: "rgba(255,255,255,0.82)" }}
+                        >
+                          {f}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-1 flex-wrap">
+                    <a
+                      href="#contact"
+                      className="inline-flex items-center gap-2.5 px-5 py-3 text-sm font-semibold rounded-full transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+                      style={{ background: "#5dd673", color: "#061f33" }}
+                    >
+                      {p.status === "Live" ? "Request Access" : "Join Waitlist"}
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path
+                          d="M2 6h7M6 2.5L9 6 6 9.5"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </a>
+                    <a
+                      href="#contact"
+                      className="px-4 py-3 text-sm font-semibold transition-all hover:underline underline-offset-4"
+                      style={{ color: "rgba(255,255,255,0.55)" }}
+                    >
+                      Talk to us →
+                    </a>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
